@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "delay.h": "c",
+        "io.h": "c"
+    },
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "c:\\Users\\venus\\_GitHubRepos\\how_to_wokwi",
+            "binaryPath": "c:\\Users\\venus\\_GitHubRepos\\how_to_wokwi\\main.elf",
+            "binaryArgs": []
+        },
+        {
+            "cwd": "c:\\Users\\venus\\_GitHubRepos\\Blink-hell-Ellara",
+            "binaryPath": "c:\\Users\\venus\\_GitHubRepos\\Blink-hell-Ellara\\main.elf",
+            "binaryArgs": []
+        }
+    ],
+    "C_Cpp.errorSquiggles": "enabled"
+}
