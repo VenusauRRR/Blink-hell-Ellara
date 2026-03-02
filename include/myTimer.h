@@ -29,8 +29,12 @@ ISR(TIMER0_COMPA_vect) {
     milisec++;
 }
 
-unsigned long getMilliSec(){
+unsigned long milliSec_get(){
     return milisec;
+}
+
+unsigned long milliSec_addTime(uint32_t extraTime){
+    return extraTime;
 }
 
 #endif
