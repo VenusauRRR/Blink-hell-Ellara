@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#include "include/myTimer.h"
+#include "../include/myTimer.h"
 
 #define LED_WHITE (1<<PB2)
 #define LED_RED (1<<PB5)

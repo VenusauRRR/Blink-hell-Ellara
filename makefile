@@ -1,23 +1,68 @@
-MCU = atmega328p
-F_CPU = 16000000UL
+# ---- Project ----
 TARGET = main
-CC="C:\avr\bin\avr-gcc"
-OBJCOPY="C:\avr\bin\avr-objcopy"
-CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Wall -Os -I./drive
+MCU    = atmega328p
+F_CPU  = 16000000UL
 
-SRC = main.c
-OBJ = $(SRC:.c=.o)
+# ---- Directories ----
+SRCDIR   = src
+INCDIR   = include
+BUILDDIR = build
 
-all: $(TARGET).hex
+# ---- Toolchain ----
+CC      = avr-gcc
+OBJCOPY = avr-objcopy
+SIZE    = avr-size
 
-$(TARGET).hex: $(TARGET).elf
+# ---- Sources (auto) ----
+SRC  := $(wildcard $(SRCDIR)/*.c)
+OBJ  := $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRC))
+DEP  := $(OBJ:.o=.d)
+
+# ---- Flags ----
+CFLAGS  = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall -Wextra -std=c11 \
+          -ffunction-sections -fdata-sections -I$(INCDIR) \
+          -MMD -MP
+LDFLAGS = -Wl,--gc-sections
+
+# ---- Avrdude / Upload (Windows) ----
+PORT       = COM6
+PROGRAMMER = arduino
+BAUD       = 115200
+
+AVRDUDE = avrdude
+AVRDUDE_FLAGS = -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD)
+
+# ---- Targets ----
+ELF = $(BUILDDIR)/$(TARGET).elf
+HEX = $(BUILDDIR)/$(TARGET).hex
+
+all: $(HEX) size
+
+# Skapa build-katalog vid behov
+$(BUILDDIR):
+	@if not exist $(BUILDDIR) mkdir $(BUILDDIR)
+
+# Länka
+$(ELF): $(BUILDDIR) $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LDFLAGS)
+
+# .hex
+$(HEX): $(ELF)
 	$(OBJCOPY) -O ihex -R .eeprom $< $@
 
-$(TARGET).elf: $(OBJ)
-	$(CC) $(CFLAGS) $^ -o $@
-
-%.o: %.c
+# Kompilera varje .c -> build/*.o
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+size: $(ELF)
+	$(SIZE) $<
+
+flash: $(HEX)
+	$(AVRDUDE) $(AVRDUDE_FLAGS) -D -U flash:w:$<:i
+
 clean:
-	del /Q *.o *.elf *.hex 2>nul || exit 0
+	@if exist $(BUILDDIR) rmdir /S /Q $(BUILDDIR)
+
+.PHONY: all flash clean size
+
+-include $(DEP)
