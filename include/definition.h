@@ -1,0 +1,36 @@
+#ifndef DEFINITION_H
+#define DEFINITION_H
+
+
+#define LED_WHITE (1 << PB2)
+#define LED_RED (1 << PB5)
+#define LED_GREEN (1 << PB4)
+#define LED_BLUE (1 << PB3)
+
+#define LED_RGB_RED (1 << PD7)
+#define LED_RGB_BLUE (1 << PD5)
+#define LED_RGB_GREEN (1 << PD6)
+#define LED_RGB_MASK (LED_RGB_RED | LED_RGB_GREEN | LED_RGB_BLUE)
+
+#define ROTOR_CLK (1 << PD2)
+#define ROTOR_DT (1 << PD3)
+#define ROTOR_SW (1 << PD4)
+
+typedef enum 
+{
+    ROTOR_ST_OFF = 0,
+    ROTOR_ST_RED = LED_RGB_RED,
+    ROTOR_ST_GREEN = LED_RGB_GREEN,
+    ROTOR_ST_BLUE = LED_RGB_BLUE,
+    ROTOR_ST_ALL = LED_RGB_MASK,
+    ROTOR_ST_COUNT = 5
+} ROTOR_STATE;
+
+typedef enum 
+{
+    ROTATION_LEFT,
+    ROTATION_RIGHT
+} ROTOR_DIRECTION;
+
+
+#endif
