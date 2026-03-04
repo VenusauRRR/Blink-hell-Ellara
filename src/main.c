@@ -2,7 +2,7 @@
 #include <util/delay.h>
 #include <stdio.h>
 
-#include "../include/myTimer.h"
+#include "../include/millis.h"
 #include "../include/adc.h"
 #include "../include/uart.h"
 #include "../include/definition.h"
