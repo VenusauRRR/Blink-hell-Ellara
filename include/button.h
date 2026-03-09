@@ -5,6 +5,15 @@
 
 static volatile uint8_t last_rotor_clk_state = 1;
 static volatile uint8_t rotor_state_idx = 0;
+unsigned long currentMilli_btn = 0;
+unsigned long previousMilli_btn_red = 0;
+unsigned long previousMilli_btn_green = 0;
+volatile uint8_t last_btn_red_state = 0;
+volatile uint8_t last_btn_green_state = 0;
+
+volatile uint8_t btn_red_flag = 0;
+volatile uint8_t btn_green_flag = 0;
+
 static const ROTOR_STATE rotor_state_list[ROTOR_ST_COUNT] = {
     ROTOR_ST_OFF,
     ROTOR_ST_RED,
@@ -22,6 +31,14 @@ static void rotor_init(void)
 
     EIMSK |= (1 << INT0); // enable INT0
 }
+
+// static void button_init(void)
+// {
+//     PCICR |= (1 << PCIE0);          // enable PCINT0..7 interrupts
+//     PCMSK0 |= BTN_GREEN | BTN_RED;  // enable PCINT0 and PCINT1
+//     DDRB &= ~(BTN_GREEN | BTN_RED); // input
+//     PORTB |= (BTN_GREEN | BTN_RED); // pull-up
+// }
 
 ISR(INT0_vect)
 {

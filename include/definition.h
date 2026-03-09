@@ -16,6 +16,9 @@
 #define ROTOR_DT (1 << PD3)
 #define ROTOR_SW (1 << PD4)
 
+#define BTN_RED (1 << PB0)
+#define BTN_GREEN (1 << PB1)
+
 typedef enum 
 {
     ROTOR_ST_OFF = 0,
@@ -28,9 +31,11 @@ typedef enum
 
 typedef enum 
 {
-    ROTATION_LEFT,
-    ROTATION_RIGHT
-} ROTOR_DIRECTION;
-
+    LED_ST_RED = LED_RED,
+    LED_ST_GREEN = LED_GREEN,
+    LED_ST_BLUE = LED_BLUE,
+    LED_ST_WHITE = LED_WHITE,
+    LED_ST_COUNT = 4
+} LED_STATE;
 
 #endif
