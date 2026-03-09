@@ -6,7 +6,7 @@
 #include "../include/adc.h"
 #include "../include/uart.h"
 #include "../include/definition.h"
-#include "../include/button.h"
+#include "../include/interrupt.h"
 
 const unsigned long interval = 250;
 
@@ -20,21 +20,14 @@ int main(void)
 {
     timer_init();
     rotor_init();
-    // button_init();
     sei();
 
     adc_init(1, 128);
     uart_init(9600);
 
-    DDRB |= LED_BLUE;
-    DDRB |= LED_GREEN;
-    DDRB |= LED_RED;
-    DDRB |= LED_WHITE;
-
-    PORTB |= LED_BLUE;
-    PORTB |= LED_GREEN;
-    PORTB |= LED_RED;
-    PORTB |= LED_WHITE;
+    uint8_t led_mask = (LED_BLUE | LED_GREEN | LED_RED | LED_WHITE);
+    DDRB |= led_mask;
+    PORTB |= led_mask;
 
     DDRD |= LED_RGB_RED;
     DDRD |= LED_RGB_GREEN;
@@ -60,8 +53,6 @@ int main(void)
     uint8_t rgb_color_state = 0;
     uint8_t led_toggle = 2;
 
-    uint8_t blink_mask = (LED_BLUE | LED_GREEN | LED_RED | LED_WHITE);
-
     while (1)
     {
         uint16_t potentioReading = adc_read(0);
@@ -73,19 +64,19 @@ int main(void)
             previousMilli = currentMilli;
 
             
-            PORTB ^= blink_mask;
+            PORTB ^= led_mask;
             uint8_t led = led_state_list[rotor_state_idx-1];
             
             
             if (led_toggle == 0){
-                blink_mask &= ~led;
+                led_mask &= ~led;
                 PORTB &= ~led;
             } else if (led_toggle == 1){
-                blink_mask &= ~led;
+                led_mask &= ~led;
                 PORTB &= ~led;
                 PORTB |= led;
             } else if (led_toggle == 2){
-                blink_mask |= led;
+                led_mask |= led;
             }
         }
         
@@ -144,15 +135,5 @@ int main(void)
         }
         last_btn_green_state = btn_green_state;
         last_btn_red_state = btn_red_state;
-
-        // if (btn_red_flag == 1){
-        //     uart_print("red");
-        //     btn_red_flag = 0;
-        // }
-        // if (btn_green_flag == 1){
-
-        //     uart_print("green");
-        //     btn_green_flag = 0;
-        // }
     }
 }
