@@ -26,11 +26,11 @@ typedef enum
     ROTOR_ST_COUNT = 5
 } ROTOR_STATE;
 
-typedef enum 
-{
-    ROTATION_LEFT,
-    ROTATION_RIGHT
-} ROTOR_DIRECTION;
+// typedef enum 
+// {
+//     ROTATION_LEFT,
+//     ROTATION_RIGHT
+// } ROTOR_DIRECTION;
 
 
 #endif

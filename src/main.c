@@ -7,7 +7,6 @@
 #include "../include/uart.h"
 #include "../include/definition.h"
 #include "../include/button.h"
-#include "../include/button.h"
 
 const unsigned long interval = 250;
 
@@ -36,6 +35,7 @@ int main(void)
 
     unsigned long currentMilli = milliSec_get();
     unsigned long previousMilli = 0;
+     unsigned long previousMilli_rgb = 0;
 
     while (1)
     {
@@ -52,5 +52,16 @@ int main(void)
             PORTB ^= LED_RED;
             PORTB ^= LED_WHITE;
         }
+
+        // if (rotor_enable == 1)
+        // {
+        //     currentMilli = milliSec_get();
+        //     if (currentMilli - previousMilli_rgb >= 1000)
+        //     {
+        //         previousMilli_rgb = currentMilli;
+        //         // PORTD &= ~LED_RGB_MASK;
+        //         PORTD ^= chosen_rgb_state;
+        //     }
+        // }
     }
 }

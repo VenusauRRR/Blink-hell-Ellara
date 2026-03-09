@@ -2,9 +2,16 @@
 #define BUTTON_H
 
 #include "../include/definition.h"
+#include "../include/millis.h"
 
 static volatile uint8_t last_rotor_clk_state = 1;
 static volatile uint8_t rotor_state_idx = 0;
+static volatile unsigned long last_rotor_interrupt = 0;
+static volatile unsigned long last_rotor_sw_interrupt = 0;
+static volatile uint8_t last_rotor_sw_state = 0;
+static volatile uint8_t rotor_enable = 0;
+static volatile uint8_t chosen_rgb_state = 0;
+
 static const ROTOR_STATE rotor_state_list[ROTOR_ST_COUNT] = {
     ROTOR_ST_OFF,
     ROTOR_ST_RED,
@@ -14,29 +21,63 @@ static const ROTOR_STATE rotor_state_list[ROTOR_ST_COUNT] = {
 
 static void rotor_init(void)
 {
-    DDRD &= ~(ROTOR_CLK | ROTOR_DT); // set as input
-    PORTD |= ROTOR_CLK | ROTOR_DT;
+    DDRD &= ~(ROTOR_CLK | ROTOR_DT | ROTOR_SW); // set as input
+    PORTD |= ROTOR_CLK | ROTOR_DT | ROTOR_SW;
 
-    EICRA |= (1 << ISC01); // falling edge
+    // falling edge for CLK and DT
+    EICRA |= (1 << ISC01); 
     EICRA &= ~(1 << ISC00);
 
-    EIMSK |= (1 << INT0); // enable INT0
+    // falling edge for SW
+    EICRA |= (1 << ISC11);
+    EICRA &= ~(1 << ISC10);
+
+    EIMSK |= (1 << INT0); // enable INT0 for CLK and DT
+    EIMSK |= (1 << INT1); // enable INT1 for SW
 }
 
 ISR(INT0_vect)
 {
+    // unsigned long now = milliSec_get();
+
+    // if (now - last_rotor_interrupt < 100){
+    //     return;
+    // }  // ignore bounce
+    
+    // last_rotor_interrupt = now;
+    // uart_print("int-");
+
+    uint8_t clk = (PIND & ROTOR_CLK) ? 1 : 0;
     uint8_t rotor_dt_state = ((PIND & ROTOR_DT) ? 1 : 0);
 
-    if (rotor_dt_state != 0)
+    if (clk == 0 && rotor_dt_state != 0)
     {
         rotor_state_idx = (rotor_state_idx + 1) % ROTOR_ST_COUNT;
     }
-    else
+    else if (clk == 0 && rotor_dt_state == 0)
     {
         rotor_state_idx = (rotor_state_idx == 0 ? (ROTOR_ST_COUNT - 1) : (rotor_state_idx - 1));
     }
     PORTD &= ~LED_RGB_MASK;
     PORTD |= rotor_state_list[rotor_state_idx];
 }
+
+// ISR(INT1_vect){
+//     unsigned long now = milliSec_get();
+
+//     if (now - last_rotor_sw_interrupt < 20){
+//         last_rotor_sw_interrupt = now;
+//         return;
+//     }  // ignore bounce
+    
+//     uint8_t rotor_sw_state = (PIND & ROTOR_SW) ? 1 : 0;
+//     if (rotor_sw_state != last_rotor_sw_state){
+//         last_rotor_sw_state = rotor_sw_state;
+//         rotor_enable = !rotor_enable;
+//         chosen_rgb_state = PORTD & LED_RGB_MASK;
+//     }
+
+
+// }
 
 #endif
