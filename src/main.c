@@ -53,6 +53,8 @@ int main(void)
     uint8_t rgb_color_state = 0;
     uint8_t led_toggle = 2;
 
+    uint8_t led_off_idx = 0;
+
     while (1)
     {
         uint16_t potentioReading = adc_read(0);
@@ -63,23 +65,45 @@ int main(void)
         {
             previousMilli = currentMilli;
 
-            
             PORTB ^= led_mask;
-            uint8_t led = led_state_list[rotor_state_idx-1];
-            
-            
-            if (led_toggle == 0){
-                led_mask &= ~led;
-                PORTB &= ~led;
-            } else if (led_toggle == 1){
-                led_mask &= ~led;
-                PORTB &= ~led;
-                PORTB |= led;
-            } else if (led_toggle == 2){
+            uint8_t led = led_state_list[rotor_state_idx - 1];
+
+            if (led_toggle == 0)
+            {
+                if (rotor_state_idx == 0)
+                {
+                    PORTB &= ~led_mask;
+                    led_toggle = 2;
+                }
+                else
+                {
+                    led_mask &= ~led;
+                    PORTB &= ~led;
+                }
+            }
+            else if (led_toggle == 1)
+            {
+                if (rotor_state_idx == 0)
+                {
+                    PORTB &= ~led_mask;
+                    led_mask &= ~led_state_list[led_off_idx];
+                    PORTB |= led_mask;
+                    led_mask |= led_state_list[led_off_idx];
+                    led_off_idx = (led_off_idx + 1) % 4;
+                }
+                else
+                {
+                    led_mask &= ~led;
+                    PORTB &= ~led;
+                    PORTB |= led;
+                }
+            }
+            if (led_toggle == 2)
+            {
                 led_mask |= led;
             }
         }
-        
+
         if (rotor_sw_enable == 1)
         {
             // Disable INT1
