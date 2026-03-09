@@ -52,16 +52,17 @@ int main(void)
     uint8_t rotor_sw_enable = 0;
     uint8_t rgb_color_state = 0;
     uint8_t led_toggle = 2;
-
     uint8_t led_off_idx = 0;
+    uint32_t extraTime_BlinkStage = 0;
 
     while (1)
     {
-        uint16_t potentioReading = adc_read(0);
-        uint32_t convertedPotentioReading = (uint32_t)potentioReading * 255 / 1023;
+        uint16_t potentioReading_A0 = adc_read(0);
+        uint16_t potentioReading_A1 = adc_read(1);
+        uint32_t convertedPotentioReading_A0 = (uint32_t)potentioReading_A0 * 255 / 1023;
 
         currentMilli = milliSec_get();
-        if (currentMilli - previousMilli >= interval + milliSec_addTime(convertedPotentioReading))
+        if (currentMilli - previousMilli >= interval + milliSec_addTime(convertedPotentioReading_A0) + milliSec_addTime(extraTime_BlinkStage))
         {
             previousMilli = currentMilli;
 
@@ -85,6 +86,7 @@ int main(void)
             {
                 if (rotor_state_idx == 0)
                 {
+                    extraTime_BlinkStage = (uint32_t)potentioReading_A1 * 255 / 1023;
                     PORTB &= ~led_mask;
                     led_mask &= ~led_state_list[led_off_idx];
                     PORTB |= led_mask;
@@ -93,6 +95,7 @@ int main(void)
                 }
                 else
                 {
+                    extraTime_BlinkStage = 0;
                     led_mask &= ~led;
                     PORTB &= ~led;
                     PORTB |= led;
