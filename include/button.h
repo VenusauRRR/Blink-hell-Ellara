@@ -6,11 +6,14 @@
 
 static volatile uint8_t last_rotor_clk_state = 1;
 static volatile uint8_t rotor_state_idx = 0;
-static volatile unsigned long last_rotor_interrupt = 0;
-static volatile unsigned long last_rotor_sw_interrupt = 0;
-static volatile uint8_t last_rotor_sw_state = 0;
-static volatile uint8_t rotor_enable = 0;
-static volatile uint8_t chosen_rgb_state = 0;
+unsigned long currentMilli_btn = 0;
+unsigned long previousMilli_btn_red = 0;
+unsigned long previousMilli_btn_green = 0;
+volatile uint8_t last_btn_red_state = 0;
+volatile uint8_t last_btn_green_state = 0;
+
+volatile uint8_t btn_red_flag = 0;
+volatile uint8_t btn_green_flag = 0;
 
 static const ROTOR_STATE rotor_state_list[ROTOR_ST_COUNT] = {
     ROTOR_ST_OFF,
@@ -28,13 +31,16 @@ static void rotor_init(void)
     EICRA |= (1 << ISC01); 
     EICRA &= ~(1 << ISC00);
 
-    // falling edge for SW
-    EICRA |= (1 << ISC11);
-    EICRA &= ~(1 << ISC10);
-
-    EIMSK |= (1 << INT0); // enable INT0 for CLK and DT
-    EIMSK |= (1 << INT1); // enable INT1 for SW
+    EIMSK |= (1 << INT0); // enable INT0
 }
+
+// static void button_init(void)
+// {
+//     PCICR |= (1 << PCIE0);          // enable PCINT0..7 interrupts
+//     PCMSK0 |= BTN_GREEN | BTN_RED;  // enable PCINT0 and PCINT1
+//     DDRB &= ~(BTN_GREEN | BTN_RED); // input
+//     PORTB |= (BTN_GREEN | BTN_RED); // pull-up
+// }
 
 ISR(INT0_vect)
 {
