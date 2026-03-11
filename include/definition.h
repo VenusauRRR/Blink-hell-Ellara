@@ -40,9 +40,9 @@ typedef enum
 } LED_STATE;
 
 typedef enum{
-    DISABLE = 0,
-    ENABLE = 1,
-    TOGGLE = 2
+    DISABLE,
+    ENABLE,
+    TOGGLE
 } LED_STIR_STATE;
 
 
@@ -50,5 +50,8 @@ extern uint8_t led_toggle;
 extern uint8_t led;
 extern uint8_t led_mask;
 extern uint8_t rotor_state_idx;
+extern uint8_t led_stir_mode;
+extern LED_STIR_STATE led_stir_choice;
+extern LED_STATE led_stir_color;
 
 #endif

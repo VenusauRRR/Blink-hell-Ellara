@@ -9,29 +9,54 @@
 
 static volatile char input[20];
 static volatile uint8_t i = 0;
-static volatile uint8_t uart_message_ready = 0;
+// static volatile uint8_t uart_message_ready = 0;
 
+uint8_t led_stir_mode = 0;
+LED_STIR_STATE led_stir_choice = DISABLE;
+LED_STATE led_stir_color = 0;
+char *stir_mode;
+char *stir_color;
 
-void stirLEDfromUART(const char* input){
-    if (strcmp(input, "off") == 0){
-        rotor_state_idx = 1;
-        led_toggle = 0;
-        // led = LED_BLUE;
-        // led_mask &= ~LED_BLUE;
-    } else if (strcmp(input, "on") == 0){
-        // led_mask |= LED_BLUE;
-        
-        rotor_state_idx = 1;
-        led_toggle = 1;
-        // led = LED_BLUE;
+void splitString(char *input)
+{
+    stir_mode = strtok(input, " ");
+    stir_color = strtok(NULL, " ");
+}
+
+void stirLEDfromUART(const char *input)
+{
+    led_stir_mode = 1;
+    uart_print_uint16(led_stir_mode);
+    splitString(input);
+
+    if (strcmp(stir_mode, "off") == 0)
+    {
+        led_stir_choice = DISABLE;
     }
-    else if (strcmp(input, "toggle") == 0){
-        // led_mask |= LED_BLUE;
-        // PORTB ^= led_mask;
-        
-        rotor_state_idx = 1;
-        led_toggle = 2;
-        // led = LED_BLUE;
+    else if (strcmp(stir_mode, "on") == 0)
+    {
+        led_stir_choice = ENABLE;
+    }
+    else if (strcmp(stir_mode, "toggle") == 0)
+    {
+        led_stir_choice = TOGGLE;
+    }
+
+    if (strcmp(stir_color, "red") == 0)
+    {
+        led_stir_color = LED_RED;
+    }
+    else if (strcmp(stir_color, "green") == 0)
+    {
+        led_stir_color = LED_GREEN;
+    }
+    else if (strcmp(stir_color, "blue") == 0)
+    {
+        led_stir_color = LED_BLUE;
+    }
+    else if (strcmp(stir_color, "white") == 0)
+    {
+        led_stir_color = LED_WHITE;
     }
 }
 
@@ -48,9 +73,6 @@ void uart_init(unsigned long baud)
 
     // Sätt ramformat: 8 databitar, 1 stoppbit
     UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
-
-    // led_toggle_ptr = *led_toggle;
-    // rotor_state_idx_ptr = *rotor_state_idx;
 }
 
 void uart_transmit(char data)
@@ -89,11 +111,9 @@ void uart_print_uint16(uint16_t value)
 
 ISR(USART_RX_vect)
 {
-    // uart_print("-");
     char a = UDR0;
     if (a != '\n' && a != '\r')
     {
-        // uart_transmit(a);
         if (i < 19)
         {
             input[i] = a;
@@ -103,9 +123,6 @@ ISR(USART_RX_vect)
         {
             input[20] = '\0';
             i = 0;
-            // uart_transmit('\n');
-
-            // uart_transmit('A');
             uart_print((char *)input);
             stirLEDfromUART(input);
         }
@@ -114,15 +131,7 @@ ISR(USART_RX_vect)
     {
         input[i] = '\0';
         i = 0;
-        uart_message_ready = 1;
-        // uart_transmit('\n');
-        // uart_transmit('A');
         uart_print((char *)input);
         stirLEDfromUART(input);
     }
-}
-
-uint8_t get_uart_message_ready(void)
-{
-    return uart_message_ready;
 }
