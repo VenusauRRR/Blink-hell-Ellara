@@ -25,6 +25,7 @@ void splitString(char *input)
 
 void stirLEDfromUART(const char *input)
 {
+    rotor_state_idx = 0;
     led_stir_mode = 1;
     uart_print_uint16(led_stir_mode);
     splitString(input);

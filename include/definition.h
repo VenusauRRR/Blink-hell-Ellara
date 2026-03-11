@@ -46,7 +46,7 @@ typedef enum{
 } LED_STIR_STATE;
 
 
-extern uint8_t led_toggle;
+extern uint8_t rgb_led_toggle;
 extern uint8_t led;
 extern uint8_t led_mask;
 extern uint8_t rotor_state_idx;

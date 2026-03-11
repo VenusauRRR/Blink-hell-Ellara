@@ -3,9 +3,9 @@
 
 #include "../include/definition.h"
 #include "../include/millis.h"
+#include "../include/uart.h"
 
 static volatile uint8_t last_rotor_clk_state = 1;
-// static volatile uint8_t rotor_state_idx = 0;
 uint8_t rotor_state_idx = 0;
 unsigned long currentMilli_btn = 0;
 unsigned long previousMilli_btn_red = 0;
@@ -37,6 +37,7 @@ static void rotor_init(void)
 
 ISR(INT0_vect)
 {
+    led_stir_mode = 0;
     uint8_t clk = (PIND & ROTOR_CLK) ? 1 : 0;
     uint8_t rotor_dt_state = ((PIND & ROTOR_DT) ? 1 : 0);
 

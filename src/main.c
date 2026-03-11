@@ -12,7 +12,7 @@
 const unsigned long interval = 250;
 
 
-uint8_t led_toggle = 0;
+uint8_t rgb_led_toggle = 0;
 uint8_t led = 0;
 uint8_t led_mask = (LED_BLUE | LED_GREEN | LED_RED | LED_WHITE);
 
@@ -79,14 +79,10 @@ int main(void)
             PORTB ^= led_mask;
             uint8_t led = led_state_list[rotor_state_idx - 1];
             
-            // uart_print_uint16(led_toggle);
-
-            //set certain LED to OFF
-
-            // uart_print("-main-\n\r");
-            // uart_print_uint16(led_stir_mode);
-            // uart_print("-main end-\n\r");
             if (led_stir_mode == 1){
+                rotor_sw_enable = 0;
+                led_mask |= led;
+                PORTD |= ROTOR_ST_OFF;
                 switch (led_stir_choice)
                 {
                 case DISABLE:{
@@ -107,101 +103,101 @@ int main(void)
                 }
             }
 
-            // if (led_toggle == 0 && led_stir_mode == 0)
-            // {
-            //     if (rotor_state_idx == 0)
-            //     {
-            //         PORTB &= ~led_mask;
-            //         led_toggle = 2;
-            //     }
-            //     else
-            //     {
-            //         led_mask &= ~led;
-            //         PORTB &= ~led;
-            //     }
-            // }
-            // //set certain LED to ON
-            // else if (led_toggle == 1 && led_stir_mode == 0)
-            // {
-            //     if (rotor_state_idx == 0)
-            //     {
-            //         extraTime_BlinkStage = (uint32_t)potentioReading_A1 * 255 / 1023;
-            //         PORTB &= ~led_mask;
-            //         led_mask &= ~led_state_list[led_off_idx];
-            //         PORTB |= led_mask;
-            //         led_mask |= led_state_list[led_off_idx];
-            //         led_off_idx = (led_off_idx + 1) % 4;
-            //     }
-            //     else
-            //     {
-            //         extraTime_BlinkStage = 0;
-            //         led_mask &= ~led;
-            //         PORTB &= ~led;
-            //         PORTB |= led;
-            //     }
-            // }
-            // // reset LED to blinking mode
-            // if (led_toggle == 2 && led_stir_mode == 0)
-            // {
-            //     led_mask |= led;
-            // }
+            if (rgb_led_toggle == 0)
+            {
+                if (rotor_state_idx == 0)
+                {
+                    PORTB &= ~led_mask;
+                    rgb_led_toggle = 2;
+                }
+                else
+                {
+                    led_mask &= ~led;
+                    PORTB &= ~led;
+                }
+            }
+            //set certain LED to ON
+            else if (rgb_led_toggle == 1)
+            {
+                if (rotor_state_idx == 0)
+                {
+                    extraTime_BlinkStage = (uint32_t)potentioReading_A1 * 255 / 1023;
+                    PORTB &= ~led_mask;
+                    led_mask &= ~led_state_list[led_off_idx];
+                    PORTB |= led_mask;
+                    led_mask |= led_state_list[led_off_idx];
+                    led_off_idx = (led_off_idx + 1) % 4;
+                }
+                else
+                {
+                    extraTime_BlinkStage = 0;
+                    led_mask &= ~led;
+                    PORTB &= ~led;
+                    PORTB |= led;
+                }
+            }
+            // reset LED to blinking mode
+            if (rgb_led_toggle == 2)
+            {
+                led_mask |= led;
+            }
         }
 
-        // if (rotor_sw_enable == 1)
-        // {
-        //     // Disable INT1
-        //     EIMSK &= ~(1 << INT0);
-        //     currentMilli_rgb = milliSec_get();
-        //     if (currentMilli_rgb - previousMilli_rgb >= 100)
-        //     {
-        //         previousMilli_rgb = currentMilli_rgb;
-        //         PORTD ^= rgb_color_state;
-        //     }
-        // }
-        // else
-        // {
-        //     EIMSK |= (1 << INT0);
-        //     PORTD &= ~(LED_RGB_MASK);
-        //     PORTD |= rotor_state_list[rotor_state_idx];
-        // }
+        if (rotor_sw_enable == 1)
+        {
+            // Disable INT1
+            EIMSK &= ~(1 << INT0);
+            currentMilli_rgb = milliSec_get();
+            if (currentMilli_rgb - previousMilli_rgb >= 100)
+            {
+                previousMilli_rgb = currentMilli_rgb;
+                PORTD ^= rgb_color_state;
+            }
+        }
+        else
+        {
+            EIMSK |= (1 << INT0);
+            PORTD &= ~(LED_RGB_MASK);
+            PORTD |= rotor_state_list[rotor_state_idx];
+        }
 
-        // uint8_t rotor_sw_state = ((PIND & ROTOR_SW) ? 1 : 0);
-        // currentMilli_sw = milliSec_get();
-        // if (last_rotor_sw_state == 1 && rotor_sw_state == 0)
-        // {
-        //     if (currentMilli_sw - previousMilli_sw >= 2000)
-        //     {
-        //         previousMilli_sw = currentMilli_sw;
-        //         // uart_print("sw start");
-        //         rotor_sw_enable = !rotor_sw_enable;
-        //         rgb_color_state = PIND & LED_RGB_MASK;
-        //     }
-        // }
+        uint8_t rotor_sw_state = ((PIND & ROTOR_SW) ? 1 : 0);
+        currentMilli_sw = milliSec_get();
+        if (last_rotor_sw_state == 1 && rotor_sw_state == 0)
+        {
+            if (currentMilli_sw - previousMilli_sw >= 2000)
+            {
+                previousMilli_sw = currentMilli_sw;
+                // uart_print("sw start");
+                rotor_sw_enable = !rotor_sw_enable;
+                rgb_color_state = PIND & LED_RGB_MASK;
+            }
+        }
 
-        // uint8_t btn_green_state = ((PINB & BTN_GREEN) ? 1 : 0);
-        // uint8_t btn_red_state = ((PINB & BTN_RED) ? 1 : 0);
-        // if (last_btn_green_state == 1 && btn_green_state == 0)
-        // {
-        //     currentMilli_btn = milliSec_get();
-        //     if (currentMilli_btn - previousMilli_btn_green >= 1000)
-        //     {
-        //         previousMilli_btn_green = currentMilli_btn;
-        //         // uart_print("Green");
-        //         led_toggle = (led_toggle + 1) % 2;
-        //     }
-        // }
-        // if (last_btn_red_state == 1 && btn_red_state == 0)
-        // {
-        //     currentMilli_btn = milliSec_get();
-        //     if (currentMilli_btn - previousMilli_btn_red >= 1000)
-        //     {
-        //         previousMilli_btn_red = currentMilli_btn;
-        //         // uart_print("Red");
-        //         led_toggle = 2;
-        //     }
-        // }
-        // last_btn_green_state = btn_green_state;
-        // last_btn_red_state = btn_red_state;
+        uint8_t btn_green_state = ((PINB & BTN_GREEN) ? 1 : 0);
+        uint8_t btn_red_state = ((PINB & BTN_RED) ? 1 : 0);
+        if (last_btn_green_state == 1 && btn_green_state == 0)
+        {
+            currentMilli_btn = milliSec_get();
+            if (currentMilli_btn - previousMilli_btn_green >= 1000)
+            {
+                previousMilli_btn_green = currentMilli_btn;
+                // uart_print("Green");
+                rgb_led_toggle = (rgb_led_toggle + 1) % 2;
+            }
+        }
+        if (last_btn_red_state == 1 && btn_red_state == 0)
+        {
+            currentMilli_btn = milliSec_get();
+            if (currentMilli_btn - previousMilli_btn_red >= 1000)
+            {
+                previousMilli_btn_red = currentMilli_btn;
+                // uart_print("Red");
+                rgb_led_toggle = 2;
+            }
+        }
+        last_btn_green_state = btn_green_state;
+        last_btn_red_state = btn_red_state;
 
     }
 }
