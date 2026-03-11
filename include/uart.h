@@ -3,6 +3,8 @@
 
 #include <avr/io.h>
 
+void stirLEDfromUART(const char* input);
+
 // Initiera UART
 void uart_init(unsigned long baud);
 
@@ -17,5 +19,7 @@ void uart_print(const char *str);
 
 // skickar uint16 som sträng
 void uart_print_uint16(uint16_t value);
+
+uint8_t get_uart_message_ready(void);
 
 #endif

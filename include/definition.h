@@ -1,6 +1,7 @@
 #ifndef DEFINITION_H
 #define DEFINITION_H
 
+#include <stdint.h>
 
 #define LED_WHITE (1 << PB2)
 #define LED_RED (1 << PB5)
@@ -37,5 +38,17 @@ typedef enum
     LED_ST_WHITE = LED_WHITE,
     LED_ST_COUNT = 4
 } LED_STATE;
+
+typedef enum{
+    DISABLE = 0,
+    ENABLE = 1,
+    TOGGLE = 2
+} LED_STIR_STATE;
+
+
+extern uint8_t led_toggle;
+extern uint8_t led;
+extern uint8_t led_mask;
+extern uint8_t rotor_state_idx;
 
 #endif

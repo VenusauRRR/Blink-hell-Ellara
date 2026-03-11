@@ -5,7 +5,8 @@
 #include "../include/millis.h"
 
 static volatile uint8_t last_rotor_clk_state = 1;
-static volatile uint8_t rotor_state_idx = 0;
+// static volatile uint8_t rotor_state_idx = 0;
+uint8_t rotor_state_idx = 0;
 unsigned long currentMilli_btn = 0;
 unsigned long previousMilli_btn_red = 0;
 unsigned long previousMilli_btn_green = 0;

@@ -7,10 +7,14 @@
 #include "../include/adc.h"
 #include "../include/uart.h"
 #include "../include/definition.h"
-#include "../include/interrupt.h"
-#include "../include/utils.h"
+#include "../include/rotor.h"
 
 const unsigned long interval = 250;
+
+
+uint8_t led_toggle = 0;
+uint8_t led = 0;
+uint8_t led_mask = (LED_BLUE | LED_GREEN | LED_RED | LED_WHITE);
 
 static const LED_STATE led_state_list[LED_ST_COUNT] = {
     LED_ST_RED,
@@ -20,14 +24,14 @@ static const LED_STATE led_state_list[LED_ST_COUNT] = {
 
 int main(void)
 {
+    adc_init(1, 128);
+    uart_init(9600);
     timer_init();
     rotor_init();
     sei();
 
-    adc_init(1, 128);
-    uart_init(9600);
 
-    uint8_t led_mask = (LED_BLUE | LED_GREEN | LED_RED | LED_WHITE);
+    // uint8_t led_mask = (LED_BLUE | LED_GREEN | LED_RED | LED_WHITE);
     DDRB |= led_mask;
     PORTB |= led_mask;
 
@@ -53,18 +57,19 @@ int main(void)
     uint8_t last_btn_green_state = 1;
     uint8_t rotor_sw_enable = 0;
     uint8_t rgb_color_state = 0;
-    uint8_t led_toggle = 2;
     uint8_t led_off_idx = 0;
     uint32_t extraTime_BlinkStage = 0;
-
-    char input[20];
-    uint8_t i = 0;
 
     while (1)
     {
         uint16_t potentioReading_A0 = adc_read(0);
         uint16_t potentioReading_A1 = adc_read(1);
         uint32_t convertedPotentioReading_A0 = (uint32_t)potentioReading_A0 * 255 / 1023;
+
+        // if (get_uart_message_ready())
+        // {
+        //     led_mask = 0;
+        // }
 
         currentMilli = milliSec_get();
         if (currentMilli - previousMilli >= interval + milliSec_addTime(convertedPotentioReading_A0) + milliSec_addTime(extraTime_BlinkStage))
@@ -73,7 +78,10 @@ int main(void)
 
             PORTB ^= led_mask;
             uint8_t led = led_state_list[rotor_state_idx - 1];
+            
+            // uart_print_uint16(led_toggle);
 
+            //set certain LED to OFF
             if (led_toggle == 0)
             {
                 if (rotor_state_idx == 0)
@@ -87,6 +95,7 @@ int main(void)
                     PORTB &= ~led;
                 }
             }
+            //set certain LED to ON
             else if (led_toggle == 1)
             {
                 if (rotor_state_idx == 0)
@@ -106,6 +115,7 @@ int main(void)
                     PORTB |= led;
                 }
             }
+            // reset LED to blinking mode
             if (led_toggle == 2)
             {
                 led_mask |= led;
@@ -137,7 +147,7 @@ int main(void)
             if (currentMilli_sw - previousMilli_sw >= 2000)
             {
                 previousMilli_sw = currentMilli_sw;
-                uart_print("sw start");
+                // uart_print("sw start");
                 rotor_sw_enable = !rotor_sw_enable;
                 rgb_color_state = PIND & LED_RGB_MASK;
             }
@@ -151,7 +161,7 @@ int main(void)
             if (currentMilli_btn - previousMilli_btn_green >= 1000)
             {
                 previousMilli_btn_green = currentMilli_btn;
-                uart_print("Green");
+                // uart_print("Green");
                 led_toggle = (led_toggle + 1) % 2;
             }
         }
@@ -161,28 +171,12 @@ int main(void)
             if (currentMilli_btn - previousMilli_btn_red >= 1000)
             {
                 previousMilli_btn_red = currentMilli_btn;
-                uart_print("Red");
+                // uart_print("Red");
                 led_toggle = 2;
             }
         }
         last_btn_green_state = btn_green_state;
         last_btn_red_state = btn_red_state;
-
-        char a = uart_receive();
-        if (a != '\n' && a != '\r'){
-            if (i<20){
-                input[i] = a;
-                i++;
-            } else {
-                input[20] = '\0';
-                i = 0;
-                uart_print(input);
-            }
-        } else {
-            input[i] = '\0';
-            i = 0;
-            uart_print(input);
-        }
 
     }
 }
