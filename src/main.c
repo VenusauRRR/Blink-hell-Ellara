@@ -1,12 +1,14 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../include/millis.h"
 #include "../include/adc.h"
 #include "../include/uart.h"
 #include "../include/definition.h"
 #include "../include/interrupt.h"
+#include "../include/utils.h"
 
 const unsigned long interval = 250;
 
@@ -54,6 +56,9 @@ int main(void)
     uint8_t led_toggle = 2;
     uint8_t led_off_idx = 0;
     uint32_t extraTime_BlinkStage = 0;
+
+    char input[20];
+    uint8_t i = 0;
 
     while (1)
     {
@@ -162,5 +167,22 @@ int main(void)
         }
         last_btn_green_state = btn_green_state;
         last_btn_red_state = btn_red_state;
+
+        char a = uart_receive();
+        if (a != '\n' && a != '\r'){
+            if (i<20){
+                input[i] = a;
+                i++;
+            } else {
+                input[20] = '\0';
+                i = 0;
+                uart_print(input);
+            }
+        } else {
+            input[i] = '\0';
+            i = 0;
+            uart_print(input);
+        }
+
     }
 }

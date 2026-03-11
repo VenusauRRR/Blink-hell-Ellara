@@ -4,6 +4,7 @@
   "editor": "wokwi",
   "parts": [
     { "type": "wokwi-breadboard", "id": "bb1", "top": -252.6, "left": 22, "attrs": {} },
+    { "type": "wokwi-serial-monitor", "id": "serial", "top": 200, "left": 200, "attrs": {} },
     { "type": "wokwi-arduino-uno", "id": "uno", "top": 87, "left": -0.6, "attrs": {} },
     { "type": "wokwi-potentiometer", "id": "pot1", "top": 8.3, "left": 643, "attrs": {} },
     { "type": "wokwi-potentiometer", "id": "pot2", "top": 8.3, "left": 748.6, "attrs": {} },
@@ -117,6 +118,7 @@
     }
   ],
   "connections": [
+    [ "mcu:TX", "serial:RX", "", [] ],
     [ "bb1:7t.e", "bb1:7b.f", "black", [ "v0" ] ],
     [ "bb1:7b.j", "bb1:bn.5", "black", [ "v0" ] ],
     [ "bb1:8b.j", "uno:10", "white", [ "v86.4", "h38.3" ] ],

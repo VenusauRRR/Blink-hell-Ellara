@@ -1,11 +1,11 @@
 build/main.o: src/main.c src/../include/millis.h src/../include/adc.h \
  src/../include/uart.h src/../include/definition.h \
- src/../include/button.h src/../include/../include/definition.h \
+ src/../include/interrupt.h src/../include/../include/definition.h \
  src/../include/../include/millis.h
 src/../include/millis.h:
 src/../include/adc.h:
 src/../include/uart.h:
 src/../include/definition.h:
-src/../include/button.h:
+src/../include/interrupt.h:
 src/../include/../include/definition.h:
 src/../include/../include/millis.h:
