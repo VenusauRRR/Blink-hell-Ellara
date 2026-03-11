@@ -9,7 +9,6 @@
 
 static volatile char input[20];
 static volatile uint8_t i = 0;
-// static volatile uint8_t uart_message_ready = 0;
 
 uint8_t led_stir_mode = 0;
 LED_STIR_STATE led_stir_choice = DISABLE;

@@ -11,7 +11,6 @@
 
 const unsigned long interval = 250;
 
-
 uint8_t rgb_led_toggle = 0;
 uint8_t led = 0;
 uint8_t led_mask = (LED_BLUE | LED_GREEN | LED_RED | LED_WHITE);
@@ -30,8 +29,6 @@ int main(void)
     rotor_init();
     sei();
 
-
-    // uint8_t led_mask = (LED_BLUE | LED_GREEN | LED_RED | LED_WHITE);
     DDRB |= led_mask;
     PORTB |= led_mask;
 
@@ -65,11 +62,6 @@ int main(void)
         uint16_t potentioReading_A0 = adc_read(0);
         uint16_t potentioReading_A1 = adc_read(1);
         uint32_t convertedPotentioReading_A0 = (uint32_t)potentioReading_A0 * 255 / 1023;
-
-        // if (get_uart_message_ready())
-        // {
-        //     led_mask = 0;
-        // }
 
         currentMilli = milliSec_get();
         if (currentMilli - previousMilli >= interval + milliSec_addTime(convertedPotentioReading_A0) + milliSec_addTime(extraTime_BlinkStage))
@@ -168,7 +160,6 @@ int main(void)
             if (currentMilli_sw - previousMilli_sw >= 2000)
             {
                 previousMilli_sw = currentMilli_sw;
-                // uart_print("sw start");
                 rotor_sw_enable = !rotor_sw_enable;
                 rgb_color_state = PIND & LED_RGB_MASK;
             }
@@ -182,7 +173,6 @@ int main(void)
             if (currentMilli_btn - previousMilli_btn_green >= 1000)
             {
                 previousMilli_btn_green = currentMilli_btn;
-                // uart_print("Green");
                 rgb_led_toggle = (rgb_led_toggle + 1) % 2;
             }
         }
@@ -192,7 +182,6 @@ int main(void)
             if (currentMilli_btn - previousMilli_btn_red >= 1000)
             {
                 previousMilli_btn_red = currentMilli_btn;
-                // uart_print("Red");
                 rgb_led_toggle = 2;
             }
         }
