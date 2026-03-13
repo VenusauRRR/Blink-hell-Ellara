@@ -10,9 +10,7 @@
 static volatile char input[20];
 static volatile uint8_t i = 0;
 
-uint8_t led_stir_mode = 0;
-LED_STIR_STATE led_stir_choice = DISABLE;
-LED_STATE led_stir_color = 0;
+LGT_STATE led_stir_choice;
 char *stir_mode;
 char *stir_color;
 
@@ -24,18 +22,15 @@ void splitString(char *input)
 
 void stirLEDfromUART(const char *input)
 {
-    rotor_state_idx = 0;
-    led_stir_mode = 1;
-    uart_print_uint16(led_stir_mode);
     splitString(input);
 
-    if (strcmp(stir_mode, "off") == 0)
+    if (strcmp(stir_mode, "disable") == 0)
     {
-        led_stir_choice = DISABLE;
+        led_stir_choice = OFF;
     }
-    else if (strcmp(stir_mode, "on") == 0)
+    else if (strcmp(stir_mode, "enable") == 0)
     {
-        led_stir_choice = ENABLE;
+        led_stir_choice = ON;
     }
     else if (strcmp(stir_mode, "toggle") == 0)
     {
@@ -44,19 +39,19 @@ void stirLEDfromUART(const char *input)
 
     if (strcmp(stir_color, "red") == 0)
     {
-        led_stir_color = LED_RED;
+        leds_uartMode.red_st = led_stir_choice;
     }
     else if (strcmp(stir_color, "green") == 0)
     {
-        led_stir_color = LED_GREEN;
+        leds_uartMode.green_st = led_stir_choice;
     }
     else if (strcmp(stir_color, "blue") == 0)
     {
-        led_stir_color = LED_BLUE;
+        leds_uartMode.blue_st = led_stir_choice;
     }
     else if (strcmp(stir_color, "white") == 0)
     {
-        led_stir_color = LED_WHITE;
+        leds_uartMode.white_st = led_stir_choice;
     }
 }
 
@@ -111,6 +106,7 @@ void uart_print_uint16(uint16_t value)
 
 ISR(USART_RX_vect)
 {
+    sys_mode = UART;
     char a = UDR0;
     if (a != '\n' && a != '\r')
     {

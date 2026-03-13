@@ -20,15 +20,57 @@
 #define BTN_RED (1 << PB0)
 #define BTN_GREEN (1 << PB1)
 
-typedef enum 
+typedef enum{
+    DEFAULT,
+    RGB,
+    UART
+} SYSTEM_MODE;
+
+typedef enum{
+    ON = 0,
+    OFF = 1,
+    TOGGLE = 2
+} LGT_STATE;
+
+// typedef enum{
+//     ON,
+//     OFF,
+//     RESET
+// } BTN_STATE;
+
+typedef enum{
+    LOCK,
+    SELECT
+} ROTOR_SW_STATE;
+
+// typedef enum{
+//     DISABLE,
+//     ENABLE,
+//     TOGGLE
+// } UART_STIR_STATE;
+
+typedef struct{
+    LGT_STATE red_st;
+    LGT_STATE green_st;
+    LGT_STATE blue_st;
+    LGT_STATE white_st;
+}LedGroup_state;
+
+typedef struct{
+    LGT_STATE red_st;
+    LGT_STATE green_st;
+    LGT_STATE blue_st;
+}RgbGroup_state;
+
+typedef enum
 {
-    ROTOR_ST_OFF = 0,
-    ROTOR_ST_RED = LED_RGB_RED,
-    ROTOR_ST_GREEN = LED_RGB_GREEN,
-    ROTOR_ST_BLUE = LED_RGB_BLUE,
-    ROTOR_ST_ALL = LED_RGB_MASK,
-    ROTOR_ST_COUNT = 5
-} ROTOR_STATE;
+    RGB_OFF = 0,
+    RGB_RED = LED_RGB_RED,
+    RGB_GREEN = LED_RGB_GREEN,
+    RGB_BLUE = LED_RGB_BLUE,
+    RGB_WHITE = 1,
+    RGB_COUNT = 5
+} RGB_COLOR;
 
 typedef enum 
 {
@@ -37,21 +79,25 @@ typedef enum
     LED_ST_BLUE = LED_BLUE,
     LED_ST_WHITE = LED_WHITE,
     LED_ST_COUNT = 4
-} LED_STATE;
+} LED_COLOR;
 
-typedef enum{
-    DISABLE,
-    ENABLE,
-    TOGGLE
-} LED_STIR_STATE;
+extern volatile  SYSTEM_MODE sys_mode;
 
+extern LedGroup_state leds_defaultMode;
+extern RgbGroup_state rgb_defaultMode;
 
-extern uint8_t rgb_led_toggle;
-extern uint8_t led;
-extern uint8_t led_mask;
-extern uint8_t rotor_state_idx;
-extern uint8_t led_stir_mode;
-extern LED_STIR_STATE led_stir_choice;
-extern LED_STATE led_stir_color;
+// extern volatile  LedGroup_state leds_rgbMode;
+// extern volatile  RgbGroup_state rgb_rgbMode;
+
+extern volatile  LedGroup_state leds_uartMode;
+extern volatile  RgbGroup_state rgb_uartMode;
+
+// extern uint8_t rgb_led_toggle;
+// extern uint8_t led;
+// extern uint8_t led_mask;
+// extern uint8_t rotor_state_idx;
+// extern uint8_t led_stir_mode;
+// extern UART_STIR_STATE led_stir_choice;
+// extern LED_COLOR led_stir_color;
 
 #endif
