@@ -16,7 +16,7 @@ volatile uint8_t rotor_state_idx = 0;
 // volatile uint8_t btn_red_flag = 0;
 // volatile uint8_t btn_green_flag = 0;
 
-void updateRGBcolor_noBtnIsPressed()
+void updateRGBcolor_switchIsNotPressed()
 {
     ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
 
@@ -75,7 +75,7 @@ ISR(INT0_vect)
         {
             rotor_state_idx = (rotor_state_idx == 0 ? (ROTOR_COLOR_COUNT - 1) : (rotor_state_idx - 1));
         }
-        updateRGBcolor_noBtnIsPressed();
+        updateRGBcolor_switchIsNotPressed();
     }
 }
 

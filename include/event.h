@@ -92,7 +92,7 @@ void updateLightingBits(Lightings_state *st){
     setBit_RGB(st->rgb_green_st, ROTOR_GREEN);
 }
 
-void updateRGBcolor_Selected(){
+void updateRGBcolor_switchIsPressed(){
     ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
     switch (c)
     {
@@ -121,6 +121,46 @@ void updateRGBcolor_Selected(){
     }
 }
 
+void updateLEDbits_atRGBmode_whenRGBcolorIsSelected_BtnIsPressed(uint8_t btn_led_rest){
+    LGT_STATE st;
+    ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
+    switch (btn_led_rest)
+    {
+    case 0:
+        st = OFF;
+        break;
+    case 1:
+        st = ON;
+        break;
+    case 2:
+        st = TOGGLE;
+        break;
+    default:
+        break;
+    }
+    switch (c)
+    {
+    case ROTOR_OFF:
+        // rotor_state_idx = (rotor_state_idx + 1) % 5;
+        // updateGBcolor_Selected();
+        // rotor_sw_select = !rotor_sw_select;
+        break;
+    case ROTOR_RED:
+        lgt_rgbMode.led_red_st = st;
+        break;
+    case ROTOR_GREEN:
+        lgt_rgbMode.led_green_st = st;
+        break;
+    case ROTOR_BLUE:
+        lgt_rgbMode.led_blue_st = st;
+        break;
+    case ROTOR_WHITE:
+        lgt_rgbMode.led_red_st = lgt_rgbMode.led_green_st = lgt_rgbMode.led_blue_st = st;
+        break;
+    default:
+        break;
+    }
+}
 // void updateRGBbits(Lightings_state *st){
 // }
 
