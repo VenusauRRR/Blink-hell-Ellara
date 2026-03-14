@@ -98,6 +98,7 @@ extern volatile  Lightings_state lgt_rgbMode;
 extern volatile  uint8_t rotor_state_idx;
 extern volatile uint8_t rotor_sw_select;
 extern volatile uint8_t btn_led_reset;
+extern volatile uint8_t led_blinkstadiet;
 
 // extern uint8_t rgb_led_toggle;
 // extern uint8_t led;

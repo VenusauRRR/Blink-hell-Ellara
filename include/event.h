@@ -5,13 +5,13 @@
 #include "../include/definition.h"
 #include "../include/bitops.h"
 
+volatile uint8_t led_state_idx = 0;
 
 // static const LED_COLOR led_state_list[LED_ST_COUNT] = {
 //     LED_ST_RED,
 //     LED_ST_GREEN,
 //     LED_ST_BLUE,
 //     LED_ST_WHITE};
-
 
 const LED_COLOR led_state_list[LED_ST_COUNT] = {
     LED_ST_RED,
@@ -25,10 +25,10 @@ const ROTOR_COLOR rotor_color_list[ROTOR_COLOR_COUNT] = {
     ROTOR_GREEN,
     ROTOR_BLUE,
     ROTOR_WHITE,
-    ROTOR_COLOR_COUNT
-};
+    ROTOR_COLOR_COUNT};
 
-void setBit_LED(LGT_STATE st, LED_COLOR led){
+void setBit_LED(LGT_STATE st, LED_COLOR led)
+{
     switch (st)
     {
     case ON:
@@ -48,7 +48,8 @@ void setBit_LED(LGT_STATE st, LED_COLOR led){
     }
 }
 
-void setBit_RGB(LGT_STATE st, ROTOR_COLOR rgb_x){
+void setBit_RGB(LGT_STATE st, ROTOR_COLOR rgb_x)
+{
     switch (st)
     {
     case ON:
@@ -68,21 +69,24 @@ void setBit_RGB(LGT_STATE st, ROTOR_COLOR rgb_x){
     }
 }
 
-//update ON/OFF/TOGGLE in struct LED
-void updateStructLedGroup(Lightings_state *st, LGT_STATE red, LGT_STATE green, LGT_STATE blue, LGT_STATE white){
+// update ON/OFF/TOGGLE in struct LED
+void updateStructLedGroup(Lightings_state *st, LGT_STATE red, LGT_STATE green, LGT_STATE blue, LGT_STATE white)
+{
     st->led_red_st = red;
     st->led_green_st = green;
     st->led_blue_st = blue;
     st->led_white_st = white;
 }
 
-void updateStructRGBGroup(Lightings_state *st, LGT_STATE red, LGT_STATE green, LGT_STATE blue){
+void updateStructRGBGroup(Lightings_state *st, LGT_STATE red, LGT_STATE green, LGT_STATE blue)
+{
     st->rgb_red_st = red;
     st->rgb_green_st = green;
     st->rgb_blue_st = blue;
 }
 
-void updateLightingBits(Lightings_state *st){
+void updateLightingBits(Lightings_state *st)
+{
     setBit_LED(st->led_red_st, LED_ST_RED);
     setBit_LED(st->led_blue_st, LED_ST_BLUE);
     setBit_LED(st->led_green_st, LED_ST_GREEN);
@@ -92,36 +96,32 @@ void updateLightingBits(Lightings_state *st){
     setBit_RGB(st->rgb_green_st, ROTOR_GREEN);
 }
 
-void updateRGBcolor_switchIsPressed(){
-    ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
+void updateLEDbits_blinkstadiet()
+{
+    LED_COLOR c = led_state_list[led_state_idx];
     switch (c)
     {
-    case ROTOR_OFF:
-        // rotor_state_idx = (rotor_state_idx + 1) % 5;
-        // updateGBcolor_Selected();
-        // rotor_sw_select = !rotor_sw_select;
+    case LED_RED:
+        lgt_rgbMode.led_red_st = OFF;
         break;
-    case ROTOR_RED:
-        lgt_rgbMode.rgb_red_st = TOGGLE;
-        lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = OFF;
+    case LED_GREEN:
+        lgt_rgbMode.led_green_st = OFF;
         break;
-    case ROTOR_GREEN:
-        lgt_rgbMode.rgb_green_st = TOGGLE;
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_blue_st = OFF;
+    case LED_BLUE:
+        lgt_rgbMode.led_blue_st = OFF;
         break;
-    case ROTOR_BLUE:
-        lgt_rgbMode.rgb_blue_st = TOGGLE;
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = OFF;
-        break;
-    case ROTOR_WHITE:
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = TOGGLE;
+    case LED_WHITE:
+        lgt_rgbMode.led_white_st = OFF;
         break;
     default:
         break;
     }
+    updateLightingBits(&lgt_rgbMode);
+    led_state_idx = (led_state_idx + 1 ) % 4;
 }
 
-void updateLEDbits_atRGBmode_whenRGBcolorIsSelected_BtnIsPressed(uint8_t btn_led_rest){
+void updateLEDbits_RGBmode_BtnIsPressed(uint8_t btn_led_rest)
+{
     LGT_STATE st;
     ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
     switch (btn_led_rest)
@@ -140,11 +140,10 @@ void updateLEDbits_atRGBmode_whenRGBcolorIsSelected_BtnIsPressed(uint8_t btn_led
     }
     switch (c)
     {
-    case ROTOR_OFF:
-        // rotor_state_idx = (rotor_state_idx + 1) % 5;
-        // updateGBcolor_Selected();
-        // rotor_sw_select = !rotor_sw_select;
-        break;
+    // case ROTOR_OFF:
+    //     led_state_idx = (led_state_idx + 1) % 4;
+    //     updateLEDbits_blinkstadiet(&lgt_rgbMode, led_state_idx);
+    //     break;
     case ROTOR_RED:
         lgt_rgbMode.led_red_st = st;
         break;

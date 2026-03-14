@@ -46,13 +46,13 @@ int main(void)
 
     updateStructLedGroup(&lgt_uartMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
     updateStructRGBGroup(&lgt_uartMode, OFF, OFF, OFF);
-    
+
     updateStructLedGroup(&lgt_rgbMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
     updateStructRGBGroup(&lgt_rgbMode, OFF, OFF, OFF);
 
     updateLightingBits(&lgt_defaultMode);
 
-        // Debounce
+    // Debounce
     unsigned long debounce_time = 20;
     unsigned long prev_sw_debounce = 0;
     unsigned long prev_btn_led_debounce = 0;
@@ -89,19 +89,26 @@ int main(void)
             default:
                 break;
             }
+
+            if (led_blinkstadiet == 1)
+            {
+                updateStructLedGroup(&lgt_rgbMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
+                updateLEDbits_blinkstadiet();
+            }
         }
 
-         // Togglar lysdioden om knappen är intryckt
+        // Togglar lysdioden om knappen är intryckt
         uint8_t current_sw_state = PIND & ROTOR_SW;
 
-        if(prev_sw_state != current_sw_state)
+        if (prev_sw_state != current_sw_state)
         {
+            sys_mode = RGB;
             prev_sw_debounce = milliSec_get();
             // uart_print("hello");
         }
-        
-        if(true_sw_state != current_sw_state)
-        {   
+
+        if (true_sw_state != current_sw_state)
+        {
             // uart_print("diff state");
             if (milliSec_get() - prev_sw_debounce > debounce_time)
             {
@@ -117,26 +124,29 @@ int main(void)
         }
         prev_sw_state = current_sw_state;
 
-        if (rotor_sw_select){
+        if (rotor_sw_select)
+        {
             updateRGBcolor_switchIsPressed();
-        } else{
+        }
+        else
+        {
             updateRGBcolor_switchIsNotPressed();
         }
 
-        //check btn_green status
-        //if (btn is pressed) -> on/off led color
-        
-        //check btn_green status
-        //if (btn is pressed) -> on/off led color
+        // check btn_green status
+        // if (btn is pressed) -> on/off led color
+
+        // check btn_green status
+        // if (btn is pressed) -> on/off led color
         uint8_t current_btn_led_state = PINB & BTN_LED;
 
-        if(prev_btn_led_state != current_btn_led_state)
+        if (prev_btn_led_state != current_btn_led_state)
         {
             prev_btn_led_debounce = milliSec_get();
         }
-        
-        if(true_btn_led_state != current_btn_led_state)
-        {   
+
+        if (true_btn_led_state != current_btn_led_state)
+        {
             if (milliSec_get() - prev_btn_led_debounce > debounce_time)
             {
                 true_btn_led_state = current_btn_led_state;
@@ -152,17 +162,17 @@ int main(void)
         }
         prev_btn_led_state = current_btn_led_state;
 
-        //check btn_red status
-        //if (btn is pressed) -> reset led color
+        // check btn_red status
+        // if (btn is pressed) -> reset led color
         uint8_t current_btn_reset_state = PINB & BTN_RESET;
 
-        if(prev_btn_reset_state != current_btn_reset_state)
+        if (prev_btn_reset_state != current_btn_reset_state)
         {
             prev_btn_reset_debounce = milliSec_get();
         }
-        
-        if(true_btn_reset_state != current_btn_reset_state)
-        {   
+
+        if (true_btn_reset_state != current_btn_reset_state)
+        {
             if (milliSec_get() - prev_btn_reset_debounce > debounce_time)
             {
                 true_btn_reset_state = current_btn_reset_state;
@@ -173,11 +183,10 @@ int main(void)
                     uart_print("btn reset is pressed");
                     uart_print("\r\n");
                 }
-
             }
         }
         prev_btn_reset_state = current_btn_reset_state;
-        
-        updateLEDbits_atRGBmode_whenRGBcolorIsSelected_BtnIsPressed(btn_led_reset);
+
+                        updateLEDbits_RGBmode_BtnIsPressed(btn_led_reset);
     }
 }
