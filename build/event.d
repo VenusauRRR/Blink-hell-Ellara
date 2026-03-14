@@ -1,5 +1,5 @@
-build/rotor.o: src/rotor.c src/../include/rotor.h \
+build/event.o: src/event.c src/../include/event.h \
  src/../include/../include/definition.h src/../include/definition.h
-src/../include/rotor.h:
+src/../include/event.h:
 src/../include/../include/definition.h:
 src/../include/definition.h:

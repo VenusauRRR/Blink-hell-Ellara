@@ -1,6 +1,7 @@
 #ifndef DEFINITION_H
 #define DEFINITION_H
 
+#include <avr/io.h>
 #include <stdint.h>
 
 #define LED_WHITE (1 << PB2)
@@ -11,7 +12,7 @@
 #define LED_RGB_RED (1 << PD7)
 #define LED_RGB_BLUE (1 << PD5)
 #define LED_RGB_GREEN (1 << PD6)
-#define LED_RGB_MASK (LED_RGB_RED | LED_RGB_GREEN | LED_RGB_BLUE)
+// #define LED_RGB_MASK (LED_RGB_RED | LED_RGB_GREEN | LED_RGB_BLUE)
 
 #define ROTOR_CLK (1 << PD2)
 #define ROTOR_DT (1 << PD3)
@@ -48,7 +49,7 @@ typedef enum
     ROTOR_RED = LED_RGB_RED,
     ROTOR_GREEN = LED_RGB_GREEN,
     ROTOR_BLUE = LED_RGB_BLUE,
-    ROTOR_WHITE = 1,
+    ROTOR_WHITE = LED_RGB_RED | LED_RGB_GREEN | LED_RGB_BLUE,
     ROTOR_COLOR_COUNT = 5
 } ROTOR_COLOR;
 
@@ -61,6 +62,25 @@ typedef enum
     LED_ST_COUNT = 4
 } LED_COLOR;
 
+// typedef enum
+// {
+//     ROTOR_OFF,
+//     ROTOR_RED,
+//     ROTOR_GREEN,
+//     ROTOR_BLUE,
+//     ROTOR_WHITE,
+//     ROTOR_COLOR_COUNT = 5
+// } ROTOR_COLOR;
+
+// typedef enum 
+// {
+//     LED_ST_RED,
+//     LED_ST_GREEN,
+//     LED_ST_BLUE,
+//     LED_ST_WHITE,
+//     LED_ST_COUNT = 4
+// } LED_COLOR;
+
 extern const LED_COLOR led_state_list[LED_ST_COUNT];
 extern const ROTOR_COLOR rotor_color_list[ROTOR_COLOR_COUNT];
 
@@ -70,6 +90,7 @@ extern Lightings_state lgt_defaultMode;
 extern volatile  Lightings_state lgt_uartMode;
 extern volatile  Lightings_state lgt_rgbMode;
 extern volatile  uint8_t rotor_state_idx;
+extern volatile uint8_t led_state_idx;
 extern volatile uint8_t rotor_sw_select;
 extern volatile uint8_t btn_led_reset;
 extern volatile uint8_t led_blinkstadiet;
