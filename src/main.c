@@ -64,6 +64,8 @@ int main(void)
     uint8_t prev_btn_reset_state = 0; // Knappen hög --> 5V
     uint8_t true_btn_reset_state = 1;
 
+    uint32_t extraTime_BlinkStage = 0;
+
     while (1)
     {
         uint16_t potentioReading_A0 = adc_read(0);
@@ -71,7 +73,7 @@ int main(void)
         uint32_t convertedPotentioReading_A0 = (uint32_t)potentioReading_A0 * 255 / 1023;
 
         currentMilli = milliSec_get();
-        if (currentMilli - previousMilli >= interval + milliSec_addTime(convertedPotentioReading_A0))
+        if (currentMilli - previousMilli >= interval + milliSec_addTime(convertedPotentioReading_A0) + milliSec_addTime(extraTime_BlinkStage))
         {
             previousMilli = currentMilli;
 
@@ -89,25 +91,26 @@ int main(void)
             default:
                 break;
             }
-            
-        if (rotor_sw_select)
-        {
-            updateRGBcolor_switchIsPressed();
-            if (led_blinkstadiet == 1)
+
+            if (rotor_sw_select)
             {
-                updateLEDbits_blinkstadiet();
-                
-    updateLightingBits(&lgt_rgbMode);
-                led_state_idx = (led_state_idx + 1) % 4;
+                updateRGBcolor_switchIsPressed();
+                if (led_blinkstadiet == 1)
+                {
+                    extraTime_BlinkStage = (uint32_t)potentioReading_A1 * 255 / 1023;
+                    updateLEDbits_blinkstadiet();
+                    updateLightingBits(&lgt_rgbMode);
+                    led_state_idx = (led_state_idx + 1) % 4;
+                }
             }
-        }
-        else
-        {
-            led_blinkstadiet = 0;
-            updateStructLedGroup(&lgt_rgbMode, OFF, OFF, OFF, OFF);
-            updateStructLedGroup(&lgt_rgbMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
-            updateRGBcolor_switchIsNotPressed();
-        }
+            else
+            {
+                led_blinkstadiet = 0;
+                extraTime_BlinkStage = 0;
+                updateStructLedGroup(&lgt_rgbMode, OFF, OFF, OFF, OFF);
+                updateStructLedGroup(&lgt_rgbMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
+                updateRGBcolor_switchIsNotPressed();
+            }
         }
 
         // Togglar lysdioden om knappen är intryckt
@@ -136,7 +139,6 @@ int main(void)
             }
         }
         prev_sw_state = current_sw_state;
-
 
         // check btn_green status
         // if (btn is pressed) -> on/off led color
@@ -182,7 +184,7 @@ int main(void)
             {
                 true_btn_reset_state = current_btn_reset_state;
 
-                if (!true_btn_reset_state  && rotor_sw_select == 1)
+                if (!true_btn_reset_state && rotor_sw_select == 1)
                 {
                     btn_led_reset = 2;
                     uart_print("btn reset is pressed");
