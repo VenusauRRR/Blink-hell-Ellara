@@ -4,8 +4,6 @@
 #include <avr/io.h>
 #include "../include/definition.h"
 #include <avr/interrupt.h>
-// #include "../include/millis.h"
-// #include "../include/uart.h"
 
 volatile uint8_t rotor_state_idx = 0;
 volatile uint8_t led_blinkstadiet = 0;

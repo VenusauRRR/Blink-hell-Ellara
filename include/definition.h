@@ -62,25 +62,6 @@ typedef enum
     LED_ST_COUNT = 4
 } LED_COLOR;
 
-// typedef enum
-// {
-//     ROTOR_OFF,
-//     ROTOR_RED,
-//     ROTOR_GREEN,
-//     ROTOR_BLUE,
-//     ROTOR_WHITE,
-//     ROTOR_COLOR_COUNT = 5
-// } ROTOR_COLOR;
-
-// typedef enum 
-// {
-//     LED_ST_RED,
-//     LED_ST_GREEN,
-//     LED_ST_BLUE,
-//     LED_ST_WHITE,
-//     LED_ST_COUNT = 4
-// } LED_COLOR;
-
 extern const LED_COLOR led_state_list[LED_ST_COUNT];
 extern const ROTOR_COLOR rotor_color_list[ROTOR_COLOR_COUNT];
 
