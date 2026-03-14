@@ -27,9 +27,9 @@ typedef enum{
 } SYSTEM_MODE;
 
 typedef enum{
-    ON = 0,
-    OFF = 1,
-    TOGGLE = 2
+    ON,
+    OFF,
+    TOGGLE
 } LGT_STATE;
 
 // typedef enum{
@@ -38,10 +38,10 @@ typedef enum{
 //     RESET
 // } BTN_STATE;
 
-typedef enum{
-    LOCK,
-    SELECT
-} ROTOR_SW_STATE;
+// typedef enum{
+//     LOCK,
+//     SELECT
+// } ROTOR_SW_STATE;
 
 // typedef enum{
 //     DISABLE,
@@ -79,7 +79,14 @@ typedef enum
     LED_ST_COUNT = 4
 } LED_COLOR;
 
+extern const LED_COLOR led_state_list[LED_ST_COUNT];
+
+extern const ROTOR_COLOR rotor_color_list[ROTOR_COLOR_COUNT];
+
 extern volatile  SYSTEM_MODE sys_mode;
+extern volatile  uint8_t rotor_sw_select;
+extern volatile  uint8_t btn_green;
+extern volatile  uint8_t btn_red;
 
 extern Lightings_state lgt_defaultMode;
 
@@ -89,6 +96,7 @@ extern Lightings_state lgt_defaultMode;
 extern volatile  Lightings_state lgt_uartMode;
 extern volatile  Lightings_state lgt_rgbMode;
 extern volatile  uint8_t rotor_state_idx;
+extern volatile uint8_t rotor_sw_select;
 
 // extern uint8_t rgb_led_toggle;
 // extern uint8_t led;

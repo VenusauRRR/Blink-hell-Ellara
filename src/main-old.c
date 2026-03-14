@@ -52,7 +52,7 @@
 
 //     uint8_t last_rotor_sw_state = 1;
 //     uint8_t last_btn_green_state = 1;
-//     uint8_t rotor_sw_enable = 0;
+//     uint8_t rotor_sw_select = 0;
 //     uint8_t rgb_color_state = 0;
 //     uint8_t led_off_idx = 0;
 //     uint32_t extraTime_BlinkStage = 0;
@@ -72,7 +72,7 @@
 //             uint8_t led = led_state_list[rotor_state_idx - 1];
             
 //             if (led_stir_mode == 1){
-//                 rotor_sw_enable = 0;
+//                 rotor_sw_select = 0;
 //                 led_mask |= led;
 //                 PORTD |= ROTOR_ST_OFF;
 //                 switch (led_stir_choice)
@@ -135,7 +135,7 @@
 //             }
 //         }
 
-//         if (rotor_sw_enable == 1)
+//         if (rotor_sw_select == 1)
 //         {
 //             // Disable INT1
 //             EIMSK &= ~(1 << INT0);
@@ -160,7 +160,7 @@
 //             if (currentMilli_sw - previousMilli_sw >= 2000)
 //             {
 //                 previousMilli_sw = currentMilli_sw;
-//                 rotor_sw_enable = !rotor_sw_enable;
+//                 rotor_sw_select = !rotor_sw_select;
 //                 rgb_color_state = PIND & LED_RGB_MASK;
 //             }
 //         }

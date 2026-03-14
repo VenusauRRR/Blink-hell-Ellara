@@ -12,7 +12,14 @@
 //     LED_ST_BLUE,
 //     LED_ST_WHITE};
 
-static const ROTOR_COLOR rotor_color_list[ROTOR_COLOR_COUNT] = {
+
+const LED_COLOR led_state_list[LED_ST_COUNT] = {
+    LED_ST_RED,
+    LED_ST_GREEN,
+    LED_ST_BLUE,
+    LED_ST_WHITE};
+
+const ROTOR_COLOR rotor_color_list[ROTOR_COLOR_COUNT] = {
     ROTOR_OFF,
     ROTOR_RED,
     ROTOR_GREEN,
@@ -83,6 +90,35 @@ void updateLightingBits(Lightings_state *st){
     setBit_RGB(st->rgb_red_st, ROTOR_RED);
     setBit_RGB(st->rgb_blue_st, ROTOR_BLUE);
     setBit_RGB(st->rgb_green_st, ROTOR_GREEN);
+}
+
+void updateRGBcolor_Selected(){
+    ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
+    switch (c)
+    {
+    case ROTOR_OFF:
+        // rotor_state_idx = (rotor_state_idx + 1) % 5;
+        // updateGBcolor_Selected();
+        // rotor_sw_select = !rotor_sw_select;
+        break;
+    case ROTOR_RED:
+        lgt_rgbMode.rgb_red_st = TOGGLE;
+        lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = OFF;
+        break;
+    case ROTOR_GREEN:
+        lgt_rgbMode.rgb_green_st = TOGGLE;
+        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_blue_st = OFF;
+        break;
+    case ROTOR_BLUE:
+        lgt_rgbMode.rgb_blue_st = TOGGLE;
+        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = OFF;
+        break;
+    case ROTOR_WHITE:
+        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = TOGGLE;
+        break;
+    default:
+        break;
+    }
 }
 
 // void updateRGBbits(Lightings_state *st){

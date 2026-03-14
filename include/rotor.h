@@ -16,17 +16,10 @@ volatile uint8_t rotor_state_idx = 0;
 // volatile uint8_t btn_red_flag = 0;
 // volatile uint8_t btn_green_flag = 0;
 
-static const ROTOR_COLOR rotor_state_list[ROTOR_COLOR_COUNT] = {
-    ROTOR_OFF,
-    ROTOR_RED,
-    ROTOR_GREEN,
-    ROTOR_BLUE,
-    ROTOR_WHITE,
-};
-
-void updateRGBcolor()
+void updateRGBcolor_noBtnIsPressed()
 {
-    ROTOR_COLOR c = rotor_state_list[rotor_state_idx];
+    ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
+
     switch (c)
     {
     case ROTOR_OFF:
@@ -66,19 +59,24 @@ static void rotor_init(void)
 
 ISR(INT0_vect)
 {
-    sys_mode = RGB;
-    uint8_t clk = (PIND & ROTOR_CLK) ? 1 : 0;
-    uint8_t rotor_dt_state = ((PIND & ROTOR_DT) ? 1 : 0);
 
-    if (clk == 0 && rotor_dt_state != 0)
+    sys_mode = RGB;
+    if (rotor_sw_select == 0)
     {
-        rotor_state_idx = (rotor_state_idx + 1) % ROTOR_COLOR_COUNT;
+
+        uint8_t clk = (PIND & ROTOR_CLK) ? 1 : 0;
+        uint8_t rotor_dt_state = ((PIND & ROTOR_DT) ? 1 : 0);
+
+        if (clk == 0 && rotor_dt_state != 0)
+        {
+            rotor_state_idx = (rotor_state_idx + 1) % ROTOR_COLOR_COUNT;
+        }
+        else if (clk == 0 && rotor_dt_state == 0)
+        {
+            rotor_state_idx = (rotor_state_idx == 0 ? (ROTOR_COLOR_COUNT - 1) : (rotor_state_idx - 1));
+        }
+        updateRGBcolor_noBtnIsPressed();
     }
-    else if (clk == 0 && rotor_dt_state == 0)
-    {
-        rotor_state_idx = (rotor_state_idx == 0 ? (ROTOR_COLOR_COUNT - 1) : (rotor_state_idx - 1));
-    }
-    updateRGBcolor();
 }
 
 #endif
