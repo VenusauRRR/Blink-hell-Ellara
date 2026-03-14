@@ -3,15 +3,8 @@
 
 #include <avr/io.h>
 #include "../include/definition.h"
-#include "../include/bitops.h"
 
 volatile uint8_t led_state_idx = 0;
-
-// static const LED_COLOR led_state_list[LED_ST_COUNT] = {
-//     LED_ST_RED,
-//     LED_ST_GREEN,
-//     LED_ST_BLUE,
-//     LED_ST_WHITE};
 
 const LED_COLOR led_state_list[LED_ST_COUNT] = {
     LED_ST_RED,
@@ -32,15 +25,12 @@ void setBit_LED(LGT_STATE st, LED_COLOR led)
     switch (st)
     {
     case ON:
-        // SET_BIT(PORTB, led);
         PORTB |= led;
         break;
     case OFF:
-        // CLR_BIT(PORTB, led);
         PORTB &= ~led;
         break;
     case TOGGLE:
-        // TOG_BIT(PORTB, led);
         PORTB ^= led;
         break;
     default:
@@ -53,15 +43,12 @@ void setBit_RGB(LGT_STATE st, ROTOR_COLOR rgb_x)
     switch (st)
     {
     case ON:
-        // SET_BIT(PORTD, rgb_x);
         PORTD |= rgb_x;
         break;
     case OFF:
-        // CLR_BIT(PORTD, rgb_x);
         PORTD &= ~rgb_x;
         break;
     case TOGGLE:
-        // TOG_BIT(PORTD, rgb_x);
         PORTD ^= rgb_x;
         break;
     default:
@@ -69,7 +56,6 @@ void setBit_RGB(LGT_STATE st, ROTOR_COLOR rgb_x)
     }
 }
 
-// update ON/OFF/TOGGLE in struct LED
 void updateStructLedGroup(Lightings_state *st, LGT_STATE red, LGT_STATE green, LGT_STATE blue, LGT_STATE white)
 {
     st->led_red_st = red;
@@ -102,19 +88,15 @@ void updateLEDbits_blinkstadiet()
     switch (c)
     {
     case LED_RED:
-        // lgt_rgbMode.led_red_st = ON;
         updateStructLedGroup(&lgt_rgbMode, ON, OFF, OFF, OFF);
         break;
     case LED_GREEN:
-        // lgt_rgbMode.led_green_st = ON;
         updateStructLedGroup(&lgt_rgbMode, OFF, ON, OFF, OFF);
         break;
     case LED_BLUE:
-        // lgt_rgbMode.led_blue_st = ON;
         updateStructLedGroup(&lgt_rgbMode, OFF, OFF, ON, OFF);
         break;
     case LED_WHITE:
-        // lgt_rgbMode.led_white_st = ON;
         updateStructLedGroup(&lgt_rgbMode, OFF, OFF, OFF, ON);
         break;
     default:
@@ -142,10 +124,6 @@ void updateLEDbits_RGBmode_BtnIsPressed(uint8_t btn_led_rest)
     }
     switch (c)
     {
-    // case ROTOR_OFF:
-    //     led_state_idx = (led_state_idx + 1) % 4;
-    //     updateLEDbits_blinkstadiet(&lgt_rgbMode, led_state_idx);
-    //     break;
     case ROTOR_RED:
         lgt_rgbMode.led_red_st = st;
         break;
@@ -162,35 +140,5 @@ void updateLEDbits_RGBmode_BtnIsPressed(uint8_t btn_led_rest)
         break;
     }
 }
-// void updateRGBbits(Lightings_state *st){
-// }
-
-// void enable_LED_BlinkStadiet(){
-
-// }
-
-// void select_RGBcolor(){
-
-// }
-
-// void runSysMode_Default(){
-// }
-
-// void updateSystemMode(SYSTEM_MODE mode){
-//     switch (mode)
-//     {
-//     case DEFAULT:
-//         /* code */
-//         break;
-//     case RGB:
-//         /* code */
-//         break;
-//     case UART:
-//         /* code */
-//         break;
-//     default:
-//         break;
-//     }
-// }
 
 #endif

@@ -5,17 +5,8 @@
 #include "../include/millis.h"
 #include "../include/uart.h"
 
-// static volatile uint8_t last_rotor_clk_state = 1;
 volatile uint8_t rotor_state_idx = 0;
 volatile uint8_t led_blinkstadiet = 0;
-// unsigned long currentMilli_btn = 0;
-// unsigned long previousMilli_btn_red = 0;
-// unsigned long previousMilli_btn_green = 0;
-// volatile uint8_t last_btn_red_state = 0;
-// volatile uint8_t last_btn_green_state = 0;
-
-// volatile uint8_t btn_red_flag = 0;
-// volatile uint8_t btn_green_flag = 0;
 
 void updateRGBcolor_switchIsPressed(){
     led_blinkstadiet = 0;
@@ -89,7 +80,6 @@ static void rotor_init(void)
 ISR(INT0_vect)
 {
     sys_mode = RGB;
-    // led_blinkstadiet = 0;
 
     if (rotor_sw_select == 0)
     {

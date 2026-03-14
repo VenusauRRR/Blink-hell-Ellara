@@ -95,7 +95,6 @@ int main(void)
             updateRGBcolor_switchIsPressed();
             if (led_blinkstadiet == 1)
             {
-                // updateStructLedGroup(&lgt_rgbMode, OFF, OFF, OFF, OFF);
                 updateLEDbits_blinkstadiet();
                 
     updateLightingBits(&lgt_rgbMode);

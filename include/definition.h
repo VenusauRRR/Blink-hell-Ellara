@@ -32,23 +32,6 @@ typedef enum{
     TOGGLE
 } LGT_STATE;
 
-// typedef enum{
-//     BTN_OFF = 0,
-//     BTN_ON = 1,
-//     BTN_RESET_ON = 2
-// } BTN_STATE;
-
-// typedef enum{
-//     LOCK,
-//     SELECT
-// } ROTOR_SW_STATE;
-
-// typedef enum{
-//     DISABLE,
-//     ENABLE,
-//     TOGGLE
-// } UART_STIR_STATE;
-
 typedef struct{
     LGT_STATE led_red_st;
     LGT_STATE led_green_st;
@@ -69,7 +52,6 @@ typedef enum
     ROTOR_COLOR_COUNT = 5
 } ROTOR_COLOR;
 
-
 typedef enum 
 {
     LED_ST_RED = LED_RED,
@@ -80,32 +62,16 @@ typedef enum
 } LED_COLOR;
 
 extern const LED_COLOR led_state_list[LED_ST_COUNT];
-
 extern const ROTOR_COLOR rotor_color_list[ROTOR_COLOR_COUNT];
 
 extern volatile  SYSTEM_MODE sys_mode;
-extern volatile  uint8_t rotor_sw_select;
-extern volatile  uint8_t btn_led;
-extern volatile  uint8_t btn_reset;
 
 extern Lightings_state lgt_defaultMode;
-
-// extern volatile  Lightings_state leds_rgbMode;
-// extern volatile  RgbGroup_state rgb_rgbMode;
-
 extern volatile  Lightings_state lgt_uartMode;
 extern volatile  Lightings_state lgt_rgbMode;
 extern volatile  uint8_t rotor_state_idx;
 extern volatile uint8_t rotor_sw_select;
 extern volatile uint8_t btn_led_reset;
 extern volatile uint8_t led_blinkstadiet;
-
-// extern uint8_t rgb_led_toggle;
-// extern uint8_t led;
-// extern uint8_t led_mask;
-// extern uint8_t rotor_state_idx;
-// extern uint8_t led_stir_mode;
-// extern UART_STIR_STATE led_stir_choice;
-// extern LED_COLOR led_stir_color;
 
 #endif
