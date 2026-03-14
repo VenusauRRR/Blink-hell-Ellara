@@ -89,7 +89,7 @@ static void rotor_init(void)
 ISR(INT0_vect)
 {
     sys_mode = RGB;
-    led_blinkstadiet = 0;
+    // led_blinkstadiet = 0;
 
     if (rotor_sw_select == 0)
     {

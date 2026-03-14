@@ -102,22 +102,24 @@ void updateLEDbits_blinkstadiet()
     switch (c)
     {
     case LED_RED:
-        lgt_rgbMode.led_red_st = OFF;
+        // lgt_rgbMode.led_red_st = ON;
+        updateStructLedGroup(&lgt_rgbMode, ON, OFF, OFF, OFF);
         break;
     case LED_GREEN:
-        lgt_rgbMode.led_green_st = OFF;
+        // lgt_rgbMode.led_green_st = ON;
+        updateStructLedGroup(&lgt_rgbMode, OFF, ON, OFF, OFF);
         break;
     case LED_BLUE:
-        lgt_rgbMode.led_blue_st = OFF;
+        // lgt_rgbMode.led_blue_st = ON;
+        updateStructLedGroup(&lgt_rgbMode, OFF, OFF, ON, OFF);
         break;
     case LED_WHITE:
-        lgt_rgbMode.led_white_st = OFF;
+        // lgt_rgbMode.led_white_st = ON;
+        updateStructLedGroup(&lgt_rgbMode, OFF, OFF, OFF, ON);
         break;
     default:
         break;
     }
-    updateLightingBits(&lgt_rgbMode);
-    led_state_idx = (led_state_idx + 1 ) % 4;
 }
 
 void updateLEDbits_RGBmode_BtnIsPressed(uint8_t btn_led_rest)
@@ -154,7 +156,7 @@ void updateLEDbits_RGBmode_BtnIsPressed(uint8_t btn_led_rest)
         lgt_rgbMode.led_blue_st = st;
         break;
     case ROTOR_WHITE:
-        lgt_rgbMode.led_red_st = lgt_rgbMode.led_green_st = lgt_rgbMode.led_blue_st = st;
+        lgt_rgbMode.led_white_st = st;
         break;
     default:
         break;
