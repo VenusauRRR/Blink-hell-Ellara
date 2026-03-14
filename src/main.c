@@ -104,13 +104,16 @@ int main(void)
                 if (!true_sw_state)
                 {
                     rotor_sw_select = !rotor_sw_select;
-                    uart_print("sw pressed");
-                    uart_print_uint16(rotor_sw_select);
-                    uart_print("\r\n");
                 }
             }
         }
         prev_sw_state = current_sw_state;
+
+        if (rotor_sw_select){
+            updateRGBcolor_Selected();
+        } else{
+            updateRGBcolor_noBtnIsPressed();
+        }
 
         //check rotor switch status
         //if (sw_enable = 1) -> can select color
