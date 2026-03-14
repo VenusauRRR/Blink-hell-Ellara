@@ -39,19 +39,19 @@ void stirLEDfromUART(const char *input)
 
     if (strcmp(stir_color, "red") == 0)
     {
-        leds_uartMode.red_st = led_stir_choice;
+        lgt_uartMode.led_red_st = led_stir_choice;
     }
     else if (strcmp(stir_color, "green") == 0)
     {
-        leds_uartMode.green_st = led_stir_choice;
+        lgt_uartMode.led_green_st = led_stir_choice;
     }
     else if (strcmp(stir_color, "blue") == 0)
     {
-        leds_uartMode.blue_st = led_stir_choice;
+        lgt_uartMode.led_blue_st = led_stir_choice;
     }
     else if (strcmp(stir_color, "white") == 0)
     {
-        leds_uartMode.white_st = led_stir_choice;
+        lgt_uartMode.led_white_st = led_stir_choice;
     }
 }
 

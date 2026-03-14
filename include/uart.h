@@ -20,7 +20,7 @@ void uart_print(const char *str);
 // skickar uint16 som sträng
 void uart_print_uint16(uint16_t value);
 
-uint8_t get_uart_message_ready(void);
+// uint8_t get_uart_message_ready(void);
 void splitString(char* input);
 
 #endif

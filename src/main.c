@@ -12,14 +12,11 @@
 
 volatile SYSTEM_MODE sys_mode = DEFAULT;
 
-LedGroup_state leds_defaultMode;
-RgbGroup_state rgb_defaultMode;
+Lightings_state lgt_defaultMode;
 
-// volatile leds_rgbMode;
-// volatile rgb_rgbMode;
+volatile Lightings_state lgt_uartMode;
 
-volatile LedGroup_state leds_uartMode;
-volatile RgbGroup_state rgb_uartMode;
+volatile Lightings_state lgt_rgbMode;
 
 const unsigned long interval = 250;
 
@@ -28,7 +25,7 @@ int main(void)
     adc_init(1, 128);
     uart_init(9600);
     timer_init();
-    // rotor_init();
+    rotor_init();
     sei();
 
     DDRB |= (LED_BLUE | LED_GREEN | LED_RED | LED_WHITE);
@@ -37,13 +34,16 @@ int main(void)
     unsigned long currentMilli = milliSec_get();
     unsigned long previousMilli = 0;
 
-    updateStructLedGroup(&leds_defaultMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
-    updateStructRGBGroup(&rgb_defaultMode, OFF, OFF, OFF);
-    updateStructLedGroup(&leds_uartMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
-    updateStructRGBGroup(&rgb_uartMode, OFF, OFF, OFF);
+    updateStructLedGroup(&lgt_defaultMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
+    updateStructRGBGroup(&lgt_defaultMode, OFF, OFF, OFF);
 
-    updateLEDsBits(&leds_defaultMode);
-    updateRGBbits(&rgb_defaultMode);
+    updateStructLedGroup(&lgt_uartMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
+    updateStructRGBGroup(&lgt_uartMode, OFF, OFF, OFF);
+    
+    updateStructLedGroup(&lgt_rgbMode, TOGGLE, TOGGLE, TOGGLE, TOGGLE);
+    updateStructRGBGroup(&lgt_rgbMode, OFF, OFF, OFF);
+
+    updateLightingBits(&lgt_defaultMode);
 
     while (1)
     {
@@ -59,10 +59,13 @@ int main(void)
             switch (sys_mode)
             {
             case DEFAULT:
-                updateLEDsBits(&leds_defaultMode);
+                updateLightingBits(&lgt_defaultMode);
+                break;
+            case RGB:
+                updateLightingBits(&lgt_rgbMode);
                 break;
             case UART:
-                updateLEDsBits(&leds_uartMode);
+                updateLightingBits(&lgt_uartMode);
                 break;
             default:
                 break;

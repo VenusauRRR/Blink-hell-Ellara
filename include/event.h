@@ -12,12 +12,14 @@
 //     LED_ST_BLUE,
 //     LED_ST_WHITE};
 
-static const RGB_COLOR rotor_color_list[RGB_COUNT] = {
-    RGB_OFF,
-    RGB_RED,
-    RGB_GREEN,
-    RGB_BLUE,
-    RGB_WHITE};
+static const ROTOR_COLOR rotor_color_list[ROTOR_COLOR_COUNT] = {
+    ROTOR_OFF,
+    ROTOR_RED,
+    ROTOR_GREEN,
+    ROTOR_BLUE,
+    ROTOR_WHITE,
+    ROTOR_COLOR_COUNT
+};
 
 void setBit_LED(LGT_STATE st, LED_COLOR led){
     switch (st)
@@ -39,7 +41,7 @@ void setBit_LED(LGT_STATE st, LED_COLOR led){
     }
 }
 
-void setBit_RGB(LGT_STATE st, RGB_COLOR rgb_x){
+void setBit_RGB(LGT_STATE st, ROTOR_COLOR rgb_x){
     switch (st)
     {
     case ON:
@@ -60,31 +62,31 @@ void setBit_RGB(LGT_STATE st, RGB_COLOR rgb_x){
 }
 
 //update ON/OFF/TOGGLE in struct LED
-void updateStructLedGroup(LedGroup_state *st, LGT_STATE red, LGT_STATE green, LGT_STATE blue, LGT_STATE white){
-    st->red_st = red;
-    st->green_st = green;
-    st->blue_st = blue;
-    st->white_st = white;
+void updateStructLedGroup(Lightings_state *st, LGT_STATE red, LGT_STATE green, LGT_STATE blue, LGT_STATE white){
+    st->led_red_st = red;
+    st->led_green_st = green;
+    st->led_blue_st = blue;
+    st->led_white_st = white;
 }
 
-void updateStructRGBGroup(RgbGroup_state *st, LGT_STATE red, LGT_STATE green, LGT_STATE blue){
-    st->red_st = red;
-    st->green_st = green;
-    st->blue_st = blue;
+void updateStructRGBGroup(Lightings_state *st, LGT_STATE red, LGT_STATE green, LGT_STATE blue){
+    st->rgb_red_st = red;
+    st->rgb_green_st = green;
+    st->rgb_blue_st = blue;
 }
 
-void updateLEDsBits(LedGroup_state *st){
-    setBit_LED(st->red_st, LED_ST_RED);
-    setBit_LED(st->blue_st, LED_ST_BLUE);
-    setBit_LED(st->green_st, LED_ST_GREEN);
-    setBit_LED(st->white_st, LED_ST_WHITE);
+void updateLightingBits(Lightings_state *st){
+    setBit_LED(st->led_red_st, LED_ST_RED);
+    setBit_LED(st->led_blue_st, LED_ST_BLUE);
+    setBit_LED(st->led_green_st, LED_ST_GREEN);
+    setBit_LED(st->led_white_st, LED_ST_WHITE);
+    setBit_RGB(st->rgb_red_st, ROTOR_RED);
+    setBit_RGB(st->rgb_blue_st, ROTOR_BLUE);
+    setBit_RGB(st->rgb_green_st, ROTOR_GREEN);
 }
 
-void updateRGBbits(RgbGroup_state *st){
-    setBit_RGB(st->red_st, RGB_RED);
-    setBit_RGB(st->blue_st, RGB_BLUE);
-    setBit_RGB(st->green_st, RGB_GREEN);
-}
+// void updateRGBbits(Lightings_state *st){
+// }
 
 // void enable_LED_BlinkStadiet(){
 

@@ -50,27 +50,25 @@ typedef enum{
 // } UART_STIR_STATE;
 
 typedef struct{
-    LGT_STATE red_st;
-    LGT_STATE green_st;
-    LGT_STATE blue_st;
-    LGT_STATE white_st;
-}LedGroup_state;
-
-typedef struct{
-    LGT_STATE red_st;
-    LGT_STATE green_st;
-    LGT_STATE blue_st;
-}RgbGroup_state;
+    LGT_STATE led_red_st;
+    LGT_STATE led_green_st;
+    LGT_STATE led_blue_st;
+    LGT_STATE led_white_st;
+    LGT_STATE rgb_red_st;
+    LGT_STATE rgb_green_st;
+    LGT_STATE rgb_blue_st;
+}Lightings_state;
 
 typedef enum
 {
-    RGB_OFF = 0,
-    RGB_RED = LED_RGB_RED,
-    RGB_GREEN = LED_RGB_GREEN,
-    RGB_BLUE = LED_RGB_BLUE,
-    RGB_WHITE = 1,
-    RGB_COUNT = 5
-} RGB_COLOR;
+    ROTOR_OFF = 0,
+    ROTOR_RED = LED_RGB_RED,
+    ROTOR_GREEN = LED_RGB_GREEN,
+    ROTOR_BLUE = LED_RGB_BLUE,
+    ROTOR_WHITE = 1,
+    ROTOR_COLOR_COUNT = 5
+} ROTOR_COLOR;
+
 
 typedef enum 
 {
@@ -83,14 +81,14 @@ typedef enum
 
 extern volatile  SYSTEM_MODE sys_mode;
 
-extern LedGroup_state leds_defaultMode;
-extern RgbGroup_state rgb_defaultMode;
+extern Lightings_state lgt_defaultMode;
 
-// extern volatile  LedGroup_state leds_rgbMode;
+// extern volatile  Lightings_state leds_rgbMode;
 // extern volatile  RgbGroup_state rgb_rgbMode;
 
-extern volatile  LedGroup_state leds_uartMode;
-extern volatile  RgbGroup_state rgb_uartMode;
+extern volatile  Lightings_state lgt_uartMode;
+extern volatile  Lightings_state lgt_rgbMode;
+extern volatile  uint8_t rotor_state_idx;
 
 // extern uint8_t rgb_led_toggle;
 // extern uint8_t led;
