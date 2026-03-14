@@ -113,22 +113,19 @@ int main(void)
             }
         }
 
-        // Togglar lysdioden om knappen är intryckt
+        //check rotor switch status
         uint8_t current_sw_state = PIND & ROTOR_SW;
 
         if (prev_sw_state != current_sw_state)
         {
             sys_mode = RGB;
             prev_sw_debounce = milliSec_get();
-            // uart_print("hello");
         }
 
         if (true_sw_state != current_sw_state)
         {
-            // uart_print("diff state");
             if (milliSec_get() - prev_sw_debounce > debounce_time)
             {
-                // uart_print("debounce > 20");
                 true_sw_state = current_sw_state;
 
                 if (!true_sw_state)
@@ -141,10 +138,6 @@ int main(void)
         prev_sw_state = current_sw_state;
 
         // check btn_green status
-        // if (btn is pressed) -> on/off led color
-
-        // check btn_green status
-        // if (btn is pressed) -> on/off led color
         uint8_t current_btn_led_state = PINB & BTN_LED;
 
         if (prev_btn_led_state != current_btn_led_state)
@@ -170,7 +163,6 @@ int main(void)
         prev_btn_led_state = current_btn_led_state;
 
         // check btn_red status
-        // if (btn is pressed) -> reset led color
         uint8_t current_btn_reset_state = PINB & BTN_RESET;
 
         if (prev_btn_reset_state != current_btn_reset_state)
