@@ -8,62 +8,62 @@
 volatile uint8_t rotor_state_idx = 0;
 volatile uint8_t led_blinkstadiet = 0;
 
-void updateRGBcolor_switchIsPressed(){
-    led_blinkstadiet = 0;
-    ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
-    switch (c)
-    {
-    case ROTOR_OFF:
-        led_blinkstadiet = 1;
-        break;
-    case ROTOR_RED:
-        lgt_rgbMode.rgb_red_st = TOGGLE;
-        lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = OFF;
-        break;
-    case ROTOR_GREEN:
-        lgt_rgbMode.rgb_green_st = TOGGLE;
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_blue_st = OFF;
-        break;
-    case ROTOR_BLUE:
-        lgt_rgbMode.rgb_blue_st = TOGGLE;
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = OFF;
-        break;
-    case ROTOR_WHITE:
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = TOGGLE;
-        break;
-    default:
-        break;
-    }
-}
+// void updateRGBcolor_switchIsPressed(){
+//     led_blinkstadiet = 0;
+//     ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
+//     switch (c)
+//     {
+//     case ROTOR_OFF:
+//         led_blinkstadiet = 1;
+//         break;
+//     case ROTOR_RED:
+//         lgt_rgbMode.rgb_red_st = TOGGLE;
+//         lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = OFF;
+//         break;
+//     case ROTOR_GREEN:
+//         lgt_rgbMode.rgb_green_st = TOGGLE;
+//         lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_blue_st = OFF;
+//         break;
+//     case ROTOR_BLUE:
+//         lgt_rgbMode.rgb_blue_st = TOGGLE;
+//         lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = OFF;
+//         break;
+//     case ROTOR_WHITE:
+//         lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = TOGGLE;
+//         break;
+//     default:
+//         break;
+//     }
+// }
 
-void updateRGBcolor_switchIsNotPressed()
-{
-    ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
+// void updateRGBcolor_switchIsNotPressed()
+// {
+//     ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
 
-    switch (c)
-    {
-    case ROTOR_OFF:
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = OFF;
-        break;
-    case ROTOR_RED:
-        lgt_rgbMode.rgb_red_st = ON;
-        lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = OFF;
-        break;
-    case ROTOR_GREEN:
-        lgt_rgbMode.rgb_green_st = ON;
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_blue_st = OFF;
-        break;
-    case ROTOR_BLUE:
-        lgt_rgbMode.rgb_blue_st = ON;
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = OFF;
-        break;
-    case ROTOR_WHITE:
-        lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = ON;
-        break;
-    default:
-        break;
-    }
-}
+//     switch (c)
+//     {
+//     case ROTOR_OFF:
+//         lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = OFF;
+//         break;
+//     case ROTOR_RED:
+//         lgt_rgbMode.rgb_red_st = ON;
+//         lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = OFF;
+//         break;
+//     case ROTOR_GREEN:
+//         lgt_rgbMode.rgb_green_st = ON;
+//         lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_blue_st = OFF;
+//         break;
+//     case ROTOR_BLUE:
+//         lgt_rgbMode.rgb_blue_st = ON;
+//         lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = OFF;
+//         break;
+//     case ROTOR_WHITE:
+//         lgt_rgbMode.rgb_red_st = lgt_rgbMode.rgb_green_st = lgt_rgbMode.rgb_blue_st = ON;
+//         break;
+//     default:
+//         break;
+//     }
+// }
 
 void rotor_init(void)
 {
@@ -94,6 +94,6 @@ ISR(INT0_vect)
         {
             rotor_state_idx = (rotor_state_idx == 0 ? (ROTOR_COLOR_COUNT - 1) : (rotor_state_idx - 1));
         }
-        updateRGBcolor_switchIsNotPressed();
+        // updateRGBcolor_switchIsNotPressed();
     }
 }

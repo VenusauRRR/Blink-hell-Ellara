@@ -4,9 +4,9 @@
 #include <avr/io.h>
 #include "../include/definition.h"
 
-void updateRGBcolor_switchIsPressed();
+// void updateRGBcolor_switchIsPressed();
 
-void updateRGBcolor_switchIsNotPressed();
+// void updateRGBcolor_switchIsNotPressed();
 
 void rotor_init(void);
 

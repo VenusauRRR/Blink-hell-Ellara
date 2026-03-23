@@ -9,49 +9,59 @@
 
 static volatile char input[20];
 static volatile uint8_t i = 0;
+// volatile Lightings_state flag_state_uart;
 
-LGT_STATE led_stir_choice;
+// LGT_STATE led_stir_choice;
 char *stir_mode;
 char *stir_color;
+
+volatile FLAG led_red_flag = BLINK;
+volatile FLAG led_green_flag = BLINK;
+volatile FLAG led_blue_flag = BLINK;
+volatile FLAG led_white_flag = BLINK;
 
 void splitString(char *input)
 {
     stir_mode = strtok(input, " ");
     stir_color = strtok(NULL, " ");
+    // stir_mode = input;
 }
 
 void stirLEDfromUART(const char *input)
 {
+    uint8_t selectedLEDmask;
     splitString(input);
+    
+    FLAG temp;
 
     if (strcmp(stir_mode, "disable") == 0)
     {
-        led_stir_choice = OFF;
+        temp = OFF;
     }
     else if (strcmp(stir_mode, "enable") == 0)
     {
-        led_stir_choice = ON;
+        temp = BLINK;
     }
     else if (strcmp(stir_mode, "toggle") == 0)
     {
-        led_stir_choice = TOGGLE;
+        temp = ON;
     }
 
     if (strcmp(stir_color, "red") == 0)
     {
-        lgt_uartMode.led_red_st = led_stir_choice;
+        led_red_flag = temp;
     }
     else if (strcmp(stir_color, "green") == 0)
     {
-        lgt_uartMode.led_green_st = led_stir_choice;
+        led_green_flag = temp;
     }
     else if (strcmp(stir_color, "blue") == 0)
     {
-        lgt_uartMode.led_blue_st = led_stir_choice;
+        led_blue_flag = temp;
     }
     else if (strcmp(stir_color, "white") == 0)
     {
-        lgt_uartMode.led_white_st = led_stir_choice;
+        led_white_flag = temp;
     }
 }
 
@@ -107,6 +117,7 @@ void uart_print_uint16(uint16_t value)
 ISR(USART_RX_vect)
 {
     sys_mode = UART;
+    // uart_print("uart mode now");
     char a = UDR0;
     if (a != '\n' && a != '\r')
     {
@@ -129,5 +140,7 @@ ISR(USART_RX_vect)
         i = 0;
         uart_print((char *)input);
         stirLEDfromUART(input);
+        // uart_print("inside interrupt: ");
+        // uart_print_uint16(led_red_flag);
     }
 }
