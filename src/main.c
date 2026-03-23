@@ -26,7 +26,7 @@ const unsigned long interval = 250;
 volatile uint8_t blink_state = 0;
 volatile uint8_t uart_output;
 volatile uint8_t red_flag = 0;
-volatile uint8_t red_flag_default = 0;
+volatile uint8_t green_flag_default = 0;
 
 int main(void)
 {
@@ -143,7 +143,7 @@ int main(void)
         if (press_btn_led)
         { // if btn_led is pressed
             // uart_print("btn led is pressed.");
-            red_flag_default = 1;
+            green_flag_default = 1;
             sys_mode = DEFAULT;
             // output &= ~LED_RED; // set led red OFF
             // uart_print(" red shall OFF");
@@ -151,7 +151,7 @@ int main(void)
         }
         if (press_btn_reset)
         {
-            red_flag_default = 2;
+            green_flag_default = 2;
             // output |= LED_MASK;
             // PORTB = (PORTB & ~LED_MASK) | (output & LED_MASK);
         }
@@ -165,9 +165,9 @@ int main(void)
             uart_output = ((blink_state & ~LED_RED) | (blink_state & LED_RED));
         }
 
-        if (red_flag_default == 1){
+        if (green_flag_default == 1){
             output &= ~LED_GREEN;
-        } else if (red_flag_default == 2){
+        } else if (green_flag_default == 2){
             output |= ((output & ~LED_GREEN) | (blink_state & LED_GREEN));
         }
 

@@ -80,6 +80,6 @@ extern volatile uint8_t led_blinkstadiet;
 // extern volatile uint8_t blink_state;
 extern volatile uint8_t uart_output;
 extern volatile uint8_t red_flag;
-extern volatile uint8_t red_flag_default;
+extern volatile uint8_t green_flag_default;
 
 #endif
