@@ -25,7 +25,10 @@ const unsigned long interval = 250;
 
 volatile uint8_t blink_state = 0;
 volatile uint8_t uart_output;
+volatile uint8_t rgb_led_output;
+volatile uint8_t rgb_output;
 volatile uint8_t red_flag = 0;
+volatile uint8_t rgb_flag = 0;
 volatile uint8_t green_flag_default = 0;
 
 int main(void)
@@ -33,7 +36,7 @@ int main(void)
     // adc_init(1, 128);
     uart_init(9600);
     timer_init();
-    // rotor_init();
+    rotor_init();
     sei();
 
     sys_mode = DEFAULT;
@@ -50,6 +53,9 @@ int main(void)
     DDRB &= ~BTN_LED;               // set btn as input
     DDRB &= ~BTN_RESET;             // set btn as input
     PORTB |= (BTN_LED | BTN_RESET); // enable internal pull up
+    DDRD &= ~(ROTOR_SW);            // set as input
+    PORTD |= ROTOR_SW;
+    DDRD |= (LED_RGB_RED | LED_RGB_GREEN | LED_RGB_BLUE);
 
     unsigned long currentMilli = milliSec_get();
     unsigned long previousMilli = 0;
@@ -70,8 +76,8 @@ int main(void)
     unsigned long prev_sw_debounce = 0;
     unsigned long prev_btn_led_debounce = 0;
     unsigned long prev_btn_reset_debounce = 0;
-    // uint8_t prev_sw_state = 0; // Knappen hög --> 5V
-    // uint8_t true_sw_state = 1;
+    uint8_t prev_sw_state = 0; // Knappen hög --> 5V
+    uint8_t true_sw_state = 1;
     // uint8_t prev_btn_led_state = 0; // Knappen hög --> 5V
     // uint8_t true_btn_led_state = 1;
     // uint8_t prev_btn_reset_state = 0; // Knappen hög --> 5V
@@ -137,6 +143,7 @@ int main(void)
         }
         uint8_t output = blink_state;
         uart_output = blink_state;
+        rgb_led_output = blink_state;
 
         press_btn_led = (PINB & BTN_LED) == 0;
         press_btn_reset = (PINB & BTN_RESET) == 0;
@@ -156,31 +163,72 @@ int main(void)
             // PORTB = (PORTB & ~LED_MASK) | (output & LED_MASK);
         }
 
-        if (red_flag == 1){
-            
-        uart_output &= ~LED_RED;
-        } else if (red_flag == 2){
+        if (red_flag == 1)
+        {
+
+            uart_output &= ~LED_RED;
+        }
+        else if (red_flag == 2)
+        {
             uart_output |= LED_RED;
-        } else {
+        }
+        else
+        {
             uart_output = ((blink_state & ~LED_RED) | (blink_state & LED_RED));
         }
 
-        if (green_flag_default == 1){
+        if (green_flag_default == 1)
+        {
             output &= ~LED_GREEN;
-        } else if (green_flag_default == 2){
+        }
+        else if (green_flag_default == 2)
+        {
             output |= ((output & ~LED_GREEN) | (blink_state & LED_GREEN));
+        }
+        if (sys_mode == RGB)
+        {
+            switch (rgb_flag)
+            {
+            case 0:
+                rgb_led_output &= ~LED_MASK;
+                rgb_output &= ~LED_RGB_MASK;
+                break;
+            case 1:
+                rgb_led_output = ((rgb_led_output & ~LED_MASK) | LED_RED);
+                rgb_output = ((rgb_output & ~LED_RGB_MASK) | LED_RGB_RED);
+                break;
+            case 2:
+                rgb_led_output = ((rgb_led_output & ~LED_MASK) | LED_GREEN);
+                rgb_output = ((rgb_output & ~LED_RGB_MASK) | LED_RGB_GREEN);
+                break;
+            case 3:
+                rgb_led_output = ((rgb_led_output & ~LED_MASK)| LED_BLUE);
+                rgb_output = ((rgb_output & ~LED_RGB_MASK) | LED_RGB_BLUE);
+                break;
+            case 4:
+                rgb_led_output = ((rgb_led_output & ~LED_MASK) | LED_WHITE);
+                rgb_output |= LED_RGB_MASK;
+                break;
+            default:
+                break;
+            }
         }
 
         if (sys_mode == UART)
         {
             PORTB = (PORTB & ~LED_MASK) | (uart_output & LED_MASK);
         }
+        else if (sys_mode == RGB)
+        {
+            PORTB = (PORTB & ~LED_MASK) | (rgb_led_output & LED_MASK);
+            PORTD = (PORTD & ~LED_RGB_MASK) | (rgb_output & LED_RGB_MASK);
+        }
         else
         {
             PORTB = (PORTB & ~LED_MASK) | (output & LED_MASK);
         }
 
-        // //check rotor switch status
+        // // check rotor switch status
         // uint8_t current_sw_state = PIND & ROTOR_SW;
 
         // if (prev_sw_state != current_sw_state)
