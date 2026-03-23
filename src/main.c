@@ -17,9 +17,11 @@ volatile uint8_t rotor_sw_select = 0;
 const unsigned long interval = 250;
 
 volatile uint8_t blink_state = 0;
+volatile uint8_t blink_state_rgb = 0;
 volatile uint8_t output_default;
 volatile uint8_t output_uart;
-volatile uint8_t output_rgb;
+volatile uint8_t output_led_rgb;
+volatile uint8_t output_rgb_rgb;
 
 volatile uint32_t extraTime_BlinkStage;
 
@@ -50,12 +52,12 @@ int main(void)
     unsigned long previousMilli = 0;
 
     // Debounce
-    // unsigned long debounce_time = 20;
-    // unsigned long prev_sw_debounce = 0;
+    unsigned long debounce_time = 20;
+    unsigned long prev_sw_debounce = 0;
     // unsigned long prev_btn_led_debounce = 0;
     // unsigned long prev_btn_reset_debounce = 0;
-    // uint8_t prev_sw_state = 0; // Knappen hög --> 5V
-    // uint8_t true_sw_state = 1;
+    uint8_t prev_sw_state = 0; // Knappen hög --> 5V
+    uint8_t true_sw_state = 1;
     // uint8_t prev_btn_led_state = 0; // Knappen hög --> 5V
     // uint8_t true_btn_led_state = 1;
     // uint8_t prev_btn_reset_state = 0; // Knappen hög --> 5V
@@ -75,11 +77,14 @@ int main(void)
             previousMilli = currentMilli;
 
             blink_state ^= LED_MASK;
+            blink_state_rgb ^= LED_RGB_MASK;
+            
         }
 
         output_default = blink_state;
         output_uart = blink_state;
-        output_rgb = blink_state;
+        output_led_rgb = blink_state;
+        output_rgb_rgb = blink_state_rgb;
 
         // rgb_mode_manager();
         // uart_mode_manager();
@@ -92,8 +97,8 @@ int main(void)
             PORTD &= ~LED_RGB_MASK;
             break;
         case RGB:
-            PORTB = ((PORTB & ~LED_MASK) | (output_rgb & LED_MASK));
-            PORTD = ((PORTD & ~LED_RGB_MASK) | (output_rgb & LED_RGB_MASK));
+            PORTB = ((PORTB & ~LED_MASK) | (output_led_rgb & LED_MASK));
+            PORTD = ((PORTD & ~LED_RGB_MASK) | (output_rgb_rgb & LED_RGB_MASK));
             break;
         case UART:
             PORTB = ((PORTB & ~LED_MASK) | (output_uart & LED_MASK));
@@ -103,29 +108,30 @@ int main(void)
             break;
         }
 
-        // //check rotor switch status
-        // uint8_t current_sw_state = PIND & ROTOR_SW;
+        //check rotor switch status
+        uint8_t current_sw_state = PIND & ROTOR_SW;
 
-        // if (prev_sw_state != current_sw_state)
-        // {
-        //     sys_mode = RGB;
-        //     prev_sw_debounce = milliSec_get();
-        // }
+        if (prev_sw_state != current_sw_state)
+        {
+            sys_mode = RGB;
+            prev_sw_debounce = milliSec_get();
+        }
 
-        // if (true_sw_state != current_sw_state)
-        // {
-        //     if (milliSec_get() - prev_sw_debounce > debounce_time)
-        //     {
-        //         true_sw_state = current_sw_state;
+        if (true_sw_state != current_sw_state)
+        {
+            if (milliSec_get() - prev_sw_debounce > debounce_time)
+            {
+                true_sw_state = current_sw_state;
 
-        //         if (!true_sw_state)
-        //         {
-        //             rotor_sw_select = !rotor_sw_select;
-        //             uart_print("rotor switch is pressed.");
-        //         }
-        //     }
-        // }
-        // prev_sw_state = current_sw_state;
+                if (!true_sw_state)
+                {
+                    rotor_sw_select = !rotor_sw_select;
+                    uart_print("rotor switch is pressed: ");
+                    uart_print_uint16(rotor_sw_select);
+                }
+            }
+        }
+        prev_sw_state = current_sw_state;
 
         // // check btn_green status
         // uint8_t current_btn_led_state = PINB & BTN_LED;

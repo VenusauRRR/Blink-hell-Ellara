@@ -4,6 +4,8 @@
 #include "../include/definition.h"
 #include "../include/uart.h"
 
+static uint8_t selectedLEDMask_rgb;
+static uint8_t selectedRGBMask_rgb;
 
 void checkFlag_UART(uint8_t mask, FLAG *f)
 {
@@ -23,6 +25,43 @@ void checkFlag_UART(uint8_t mask, FLAG *f)
     }
 }
 
+void updateRGBColor(){
+    switch (rotor_state_idx)
+    {
+    case _OFF:
+        output_rgb_rgb &= ~LED_RGB_MASK;
+        break;
+    case _RED:
+        output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | LED_RGB_RED;
+        selectedLEDMask_rgb = LED_RED;
+        selectedRGBMask_rgb = LED_RGB_RED;
+        break;
+        case _GREEN:
+        output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | LED_RGB_GREEN;
+        selectedLEDMask_rgb = LED_GREEN;
+        selectedRGBMask_rgb = LED_RGB_GREEN;
+        break;
+        case _BLUE:
+        output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | LED_RGB_BLUE;
+        selectedLEDMask_rgb = LED_BLUE;
+        selectedRGBMask_rgb = LED_RGB_BLUE;
+        break;
+        case _WHITE:
+        output_rgb_rgb |= LED_RGB_MASK;
+        selectedLEDMask_rgb = LED_BLUE;
+        selectedRGBMask_rgb = LED_RGB_MASK;
+        break;
+    default:
+        break;
+    }
+}
+
+void selectRGBcolor(){
+    if (rotor_sw_select){
+        output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | (blink_state_rgb & selectedRGBMask_rgb);
+    }
+}
+
 void flag_manager()
 {
     switch (sys_mode)
@@ -35,7 +74,10 @@ void flag_manager()
         checkFlag_UART(LED_BLUE, &led_blue_flag_uart);
         checkFlag_UART(LED_WHITE, &led_white_flag_uart);
         break;
-
+    case RGB:
+        updateRGBColor();
+        selectRGBcolor();
+        break;
     default:
         break;
     }

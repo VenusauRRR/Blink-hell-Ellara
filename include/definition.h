@@ -22,6 +22,12 @@
 #define BTN_RESET (1 << PB0)
 #define BTN_LED (1 << PB1)
 
+#define _OFF 0
+#define _RED 1
+#define _GREEN 2
+#define _BLUE 3
+#define _WHITE 4
+
 typedef enum{
     DEFAULT,
     RGB,
@@ -86,9 +92,11 @@ extern volatile  uint8_t rotor_state_idx;
 extern volatile uint8_t rotor_sw_select;
 
 extern volatile uint8_t blink_state;
+extern volatile uint8_t blink_state_rgb;
 extern volatile uint8_t output_default;
 extern volatile uint8_t output_uart;
-extern volatile uint8_t output_rgb;
+extern volatile uint8_t output_led_rgb;
+extern volatile uint8_t output_rgb_rgb;
 
 extern volatile uint32_t extraTime_BlinkStage;
 
