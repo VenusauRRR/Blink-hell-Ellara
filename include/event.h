@@ -14,6 +14,8 @@ void updateStructRGBGroup(Lightings_state *st, LGT_STATE red, LGT_STATE green, L
 
 void updateLightingBits(Lightings_state *st);
 
+void updateLightingBits_RGB(Lightings_state *st);
+
 void updateLEDbits_blinkstadiet();
 
 void updateLEDbits_RGBmode_BtnIsPressed(uint8_t btn_led_rest);

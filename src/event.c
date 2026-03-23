@@ -81,6 +81,17 @@ void updateLightingBits(Lightings_state *st)
     setBit_RGB(st->rgb_green_st, ROTOR_GREEN);
 }
 
+void updateLightingBits_RGB(Lightings_state *st)
+{
+    setBit_LED(st->led_red_st, LED_ST_RED);
+    setBit_LED(st->led_blue_st, LED_ST_BLUE);
+    setBit_LED(st->led_green_st, LED_ST_GREEN);
+    setBit_LED(st->led_white_st, LED_ST_WHITE);
+    setBit_RGB(st->rgb_red_st, ROTOR_RED);
+    setBit_RGB(st->rgb_blue_st, ROTOR_BLUE);
+    setBit_RGB(st->rgb_green_st, ROTOR_GREEN);
+}
+
 void updateLEDbits_blinkstadiet()
 {
     LED_COLOR c = led_state_list[led_state_idx];
@@ -107,6 +118,7 @@ void updateLEDbits_RGBmode_BtnIsPressed(uint8_t btn_led_rest)
 {
     LGT_STATE st;
     ROTOR_COLOR c = rotor_color_list[rotor_state_idx];
+    // uint8_t chosen_pin_state;
     switch (btn_led_rest)
     {
     case 0:

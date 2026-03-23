@@ -26,7 +26,7 @@ CFLAGS  = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall -Wextra -std=c11 \
 LDFLAGS = -Wl,--gc-sections
 
 # ---- Avrdude / Upload (Windows) ----
-PORT       = COM6
+PORT       = COM7
 PROGRAMMER = arduino
 BAUD       = 115200
 

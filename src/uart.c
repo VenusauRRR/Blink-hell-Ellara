@@ -16,43 +16,64 @@ char *stir_color;
 
 void splitString(char *input)
 {
-    stir_mode = strtok(input, " ");
-    stir_color = strtok(NULL, " ");
+    // stir_mode = strtok(input, " ");
+    // stir_color = strtok(NULL, " ");
+    stir_mode = input;
 }
 
 void stirLEDfromUART(const char *input)
 {
     splitString(input);
 
-    if (strcmp(stir_mode, "disable") == 0)
+
+    
+    if (strcmp(stir_mode, "disable red") == 0)
     {
-        led_stir_choice = OFF;
+        red_flag = 1;
+        uart_print("red is disable");
     }
-    else if (strcmp(stir_mode, "enable") == 0)
+    else if (strcmp(stir_mode, "enable red") == 0)
     {
-        led_stir_choice = ON;
+        red_flag = 0;
+        
+        uart_print("red is enabled");
     }
-    else if (strcmp(stir_mode, "toggle") == 0)
+    else if (strcmp(stir_mode, "toggle red") == 0)
     {
-        led_stir_choice = TOGGLE;
+        red_flag = 2;
+        
+        uart_print("red is toggled");
     }
 
-    if (strcmp(stir_color, "red") == 0)
-    {
-        lgt_uartMode.led_red_st = led_stir_choice;
-    }
-    else if (strcmp(stir_color, "green") == 0)
-    {
-        lgt_uartMode.led_green_st = led_stir_choice;
-    }
-    else if (strcmp(stir_color, "blue") == 0)
-    {
-        lgt_uartMode.led_blue_st = led_stir_choice;
-    }
-    else if (strcmp(stir_color, "white") == 0)
-    {
-        lgt_uartMode.led_white_st = led_stir_choice;
-    }
+    // if (strcmp(stir_mode, "disable") == 0)
+    // {
+    //     led_stir_choice = OFF;
+    // }
+    // else if (strcmp(stir_mode, "enable") == 0)
+    // {
+    //     led_stir_choice = TOGGLE;
+    // }
+    // else if (strcmp(stir_mode, "toggle") == 0)
+    // {
+    //     led_stir_choice = !led_stir_choice;
+    // }
+
+    // if (strcmp(stir_color, "red") == 0)
+    // {
+    //     lgt_uartMode.led_red_st = led_stir_choice;
+    // }
+    // else if (strcmp(stir_color, "green") == 0)
+    // {
+    //     lgt_uartMode.led_green_st = led_stir_choice;
+    // }
+    // else if (strcmp(stir_color, "blue") == 0)
+    // {
+    //     lgt_uartMode.led_blue_st = led_stir_choice;
+    // }
+    // else if (strcmp(stir_color, "white") == 0)
+    // {
+    //     lgt_uartMode.led_white_st = led_stir_choice;
+    // }
 }
 
 void uart_init(unsigned long baud)
@@ -107,6 +128,7 @@ void uart_print_uint16(uint16_t value)
 ISR(USART_RX_vect)
 {
     sys_mode = UART;
+    // uart_print("uart mode now");
     char a = UDR0;
     if (a != '\n' && a != '\r')
     {

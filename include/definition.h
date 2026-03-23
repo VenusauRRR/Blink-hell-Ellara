@@ -8,11 +8,12 @@
 #define LED_RED (1 << PB5)
 #define LED_GREEN (1 << PB4)
 #define LED_BLUE (1 << PB3)
+#define LED_MASK (LED_BLUE | LED_RED | LED_GREEN | LED_WHITE)
 
 #define LED_RGB_RED (1 << PD7)
 #define LED_RGB_BLUE (1 << PD5)
 #define LED_RGB_GREEN (1 << PD6)
-// #define LED_RGB_MASK (LED_RGB_RED | LED_RGB_GREEN | LED_RGB_BLUE)
+#define LED_RGB_MASK (LED_RGB_RED | LED_RGB_GREEN | LED_RGB_BLUE)
 
 #define ROTOR_CLK (1 << PD2)
 #define ROTOR_DT (1 << PD3)
@@ -75,5 +76,10 @@ extern volatile uint8_t led_state_idx;
 extern volatile uint8_t rotor_sw_select;
 extern volatile uint8_t btn_led_reset;
 extern volatile uint8_t led_blinkstadiet;
+
+// extern volatile uint8_t blink_state;
+extern volatile uint8_t uart_output;
+extern volatile uint8_t red_flag;
+extern volatile uint8_t red_flag_default;
 
 #endif
