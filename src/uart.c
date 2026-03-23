@@ -15,10 +15,10 @@ static volatile uint8_t i = 0;
 char *stir_mode;
 char *stir_color;
 
-volatile FLAG led_red_flag = BLINK;
-volatile FLAG led_green_flag = BLINK;
-volatile FLAG led_blue_flag = BLINK;
-volatile FLAG led_white_flag = BLINK;
+volatile FLAG led_red_flag_uart = BLINK;
+volatile FLAG led_green_flag_uart = BLINK;
+volatile FLAG led_blue_flag_uart = BLINK;
+volatile FLAG led_white_flag_uart = BLINK;
 
 void splitString(char *input)
 {
@@ -49,19 +49,19 @@ void stirLEDfromUART(const char *input)
 
     if (strcmp(stir_color, "red") == 0)
     {
-        led_red_flag = temp;
+        led_red_flag_uart = temp;
     }
     else if (strcmp(stir_color, "green") == 0)
     {
-        led_green_flag = temp;
+        led_green_flag_uart = temp;
     }
     else if (strcmp(stir_color, "blue") == 0)
     {
-        led_blue_flag = temp;
+        led_blue_flag_uart = temp;
     }
     else if (strcmp(stir_color, "white") == 0)
     {
-        led_white_flag = temp;
+        led_white_flag_uart = temp;
     }
 }
 
@@ -141,6 +141,6 @@ ISR(USART_RX_vect)
         uart_print((char *)input);
         stirLEDfromUART(input);
         // uart_print("inside interrupt: ");
-        // uart_print_uint16(led_red_flag);
+        // uart_print_uint16(led_red_flag_uart);
     }
 }

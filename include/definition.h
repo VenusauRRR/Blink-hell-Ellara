@@ -97,10 +97,10 @@ extern volatile uint32_t extraTime_BlinkStage;
 // extern volatile Lightings_state flag_state_uart;
 // extern volatile Lightings_state flag_state_rgb;
 
-extern volatile FLAG led_red_flag;
-extern volatile FLAG led_green_flag;
-extern volatile FLAG led_blue_flag;
-extern volatile FLAG led_white_flag;
+extern volatile FLAG led_red_flag_uart;
+extern volatile FLAG led_green_flag_uart;
+extern volatile FLAG led_blue_flag_uart;
+extern volatile FLAG led_white_flag_uart;
 
 // extern volatile char *input;
 

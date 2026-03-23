@@ -30,10 +30,10 @@ void flag_manager()
     case UART:
     // uart_print("red flag: ");'
     // uart_print_uint16(led_red'_flag);
-        checkFlag_UART(LED_RED, &led_red_flag);
-        checkFlag_UART(LED_GREEN, &led_green_flag);
-        checkFlag_UART(LED_BLUE, &led_blue_flag);
-        checkFlag_UART(LED_WHITE, &led_white_flag);
+        checkFlag_UART(LED_RED, &led_red_flag_uart);
+        checkFlag_UART(LED_GREEN, &led_green_flag_uart);
+        checkFlag_UART(LED_BLUE, &led_blue_flag_uart);
+        checkFlag_UART(LED_WHITE, &led_white_flag_uart);
         break;
 
     default:
