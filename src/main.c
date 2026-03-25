@@ -125,7 +125,7 @@ int main(void)
                     uart_print_uint16(rotor_sw_select);
                 } else {
                     uart_print("rotor switch is released: ");
-                    btn_led_reset = 4;
+                    btn_led_reset = _rgb_btn_X;
                 }
             }
         }
@@ -182,7 +182,7 @@ int main(void)
 
                 if (!true_btn_reset_state)
                 {
-                    btn_led_reset = 2;
+                    btn_led_reset = _rgb_btn_BLINK;
                     uart_print("btn reset is pressed");
                     uart_print("\r\n");
                 }
