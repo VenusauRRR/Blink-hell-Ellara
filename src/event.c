@@ -6,60 +6,148 @@
 
 static uint8_t selectedLEDMask_rgb;
 static uint8_t selectedRGBMask_rgb;
+static FLAG *selectedFlag_rgb;
 
-void checkFlag_UART(uint8_t mask, FLAG *f)
+volatile FLAG led_red_flag_rgb = BLINK;
+volatile FLAG led_green_flag_rgb = BLINK;
+volatile FLAG led_blue_flag_rgb = BLINK;
+volatile FLAG led_white_flag_rgb = BLINK;
+
+void checkFlag(uint8_t mask, uint8_t *output, uint8_t *blinkState, FLAG *f)
 {
     switch (*f)
     {
     case OFF:
-        output_uart &= ~(mask);
+        (*output) &= ~(mask);
         break;
     case ON:
-        output_uart |= (mask);
+        (*output) |= (mask);
         break;
     case BLINK:
-        output_uart = (output_uart & ~(mask)) | (blink_state & (mask));
+        (*output) = ((*output) & ~(mask)) | ((*blinkState) & (mask));
         break;
     default:
         break;
     }
 }
 
-void updateRGBColor(){
+void updateRGBColor()
+{
     switch (rotor_state_idx)
     {
-    case _OFF:
+    case _rgb_OFF:
         output_rgb_rgb &= ~LED_RGB_MASK;
+        // stadiet
         break;
-    case _RED:
+    case _rgb_RED:
         output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | LED_RGB_RED;
         selectedLEDMask_rgb = LED_RED;
         selectedRGBMask_rgb = LED_RGB_RED;
+        // selectedFlag_rgb = &led_red_flag_rgb;
         break;
-        case _GREEN:
+    case _rgb_GREEN:
         output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | LED_RGB_GREEN;
         selectedLEDMask_rgb = LED_GREEN;
         selectedRGBMask_rgb = LED_RGB_GREEN;
+        // selectedFlag_rgb = &led_green_flag_rgb;
+
         break;
-        case _BLUE:
+    case _rgb_BLUE:
         output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | LED_RGB_BLUE;
         selectedLEDMask_rgb = LED_BLUE;
         selectedRGBMask_rgb = LED_RGB_BLUE;
+        // selectedFlag_rgb = &led_blue_flag_rgb;
         break;
-        case _WHITE:
+    case _rgb_WHITE:
         output_rgb_rgb |= LED_RGB_MASK;
-        selectedLEDMask_rgb = LED_BLUE;
+        selectedLEDMask_rgb = LED_WHITE;
         selectedRGBMask_rgb = LED_RGB_MASK;
+        // selectedFlag_rgb = &led_white_flag_rgb;
         break;
     default:
         break;
     }
 }
 
-void selectRGBcolor(){
-    if (rotor_sw_select){
+void selectRGBcolor()
+{
+    if (rotor_sw_select)
+    {
         output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | (blink_state_rgb & selectedRGBMask_rgb);
     }
+}
+
+void updateLEDColorFromRGB_whenRotorSwitchIsPressed()
+{
+    // uint8_t currentState = (output_led_rgb & LED_MASK);
+    if (!rotor_sw_select)
+    {
+        return;
+    }
+
+    
+    switch (rotor_state_idx)
+    {
+    case _rgb_OFF:
+        output_rgb_rgb &= ~LED_RGB_MASK;
+        // stadiet
+        break;
+    case _rgb_RED:
+        selectedFlag_rgb = &led_red_flag_rgb;
+        break;
+    case _rgb_GREEN:
+        selectedFlag_rgb = &led_green_flag_rgb;
+        break;
+    case _rgb_BLUE:
+        selectedFlag_rgb = &led_blue_flag_rgb;
+        break;
+    case _rgb_WHITE:
+        selectedFlag_rgb = &led_white_flag_rgb;
+        break;
+    default:
+        break;
+    }
+}
+
+void updateLEDColorFromRGB_whenBtnIsPressed(){
+    if (btn_led_reset == 4){
+        return;
+    }
+    FLAG temp;
+    if (btn_led_reset == 0)
+    {
+        temp = OFF;
+    }
+    else if (btn_led_reset == 1)
+    {
+        temp = ON;
+    }
+    else if (btn_led_reset == 2)
+    {
+        temp = BLINK;
+    }
+
+    // uart_print("before: ");
+    // uart_print_uint16(*selectedFlag_rgb);
+    // *selectedFlag_rgb = temp;
+    // uart_print("\r\n");
+    // uart_print("after: ");
+    // uart_print_uint16(*selectedFlag_rgb);
+    // uart_print("\r\n");
+    *selectedFlag_rgb = temp;
+    // if (btn_led_reset>=0 && btn_led_reset <4){
+        // output_led_rgb &= ~selectedLEDMask_rgb;
+    //         uart_print("red: ");
+    // uart_print_uint16(led_red_flag_rgb);
+    // uart_print(",green: ");
+    // uart_print_uint16(led_green_flag_rgb);
+    // uart_print(",blue: ");
+    // uart_print_uint16(led_blue_flag_rgb);
+    // uart_print(",white: ");
+    // uart_print_uint16(led_white_flag_rgb);
+    // temp = BLINK;
+    // btn_led_reset = 4;
+    // }
 }
 
 void flag_manager()
@@ -67,22 +155,29 @@ void flag_manager()
     switch (sys_mode)
     {
     case UART:
-    // uart_print("red flag: ");'
-    // uart_print_uint16(led_red'_flag);
-        checkFlag_UART(LED_RED, &led_red_flag_uart);
-        checkFlag_UART(LED_GREEN, &led_green_flag_uart);
-        checkFlag_UART(LED_BLUE, &led_blue_flag_uart);
-        checkFlag_UART(LED_WHITE, &led_white_flag_uart);
+        // uart_print("red flag: ");'
+        // uart_print_uint16(led_red'_flag);
+        btn_led_reset = -1;
+        checkFlag(LED_RED, &output_uart, &blink_state, &led_red_flag_uart);
+        checkFlag(LED_GREEN, &output_uart, &blink_state, &led_green_flag_uart);
+        checkFlag(LED_BLUE, &output_uart, &blink_state, &led_blue_flag_uart);
+        checkFlag(LED_WHITE, &output_uart, &blink_state, &led_white_flag_uart);
         break;
     case RGB:
         updateRGBColor();
         selectRGBcolor();
+        updateLEDColorFromRGB_whenRotorSwitchIsPressed();
+        updateLEDColorFromRGB_whenBtnIsPressed();
+        checkFlag(LED_RED, &output_led_rgb, &blink_state, &led_red_flag_rgb);
+        checkFlag(LED_GREEN, &output_led_rgb, &blink_state, &led_green_flag_rgb);
+        checkFlag(LED_BLUE, &output_led_rgb, &blink_state, &led_blue_flag_rgb);
+        checkFlag(LED_WHITE, &output_led_rgb, &blink_state, &led_white_flag_rgb);
+        // updateLEDColorFromRGB_whenBtnIsPressed();
         break;
     default:
         break;
     }
 }
-
 
 // volatile uint8_t led_state_idx = 0;
 

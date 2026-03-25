@@ -23,7 +23,13 @@ volatile uint8_t output_uart;
 volatile uint8_t output_led_rgb;
 volatile uint8_t output_rgb_rgb;
 
+volatile uint8_t btn_led_reset = 4;
+// volatile uint8_t btn_led_isPressed = 0;
+
 volatile uint32_t extraTime_BlinkStage;
+
+// uint8_t press_btn_led;
+uint8_t press_btn_reset;
 
 int main(void)
 {
@@ -39,11 +45,11 @@ int main(void)
     DDRD |= LED_RGB_MASK; // set as output
     PORTD |= LED_RGB_MASK;
 
-    // DDRB &= ~BTN_LED; // set as input
-    // DDRB |= BTN_LED;  // enable pull up
+    DDRB &= ~BTN_LED; // set as input
+    PORTB |= BTN_LED; // enable pull up
 
-    // DDRB &= ~BTN_RESET; // set as input
-    // DDRB |= BTN_RESET;  // enable pull up
+    DDRB &= ~BTN_RESET; // set as input
+    PORTB |= BTN_RESET; // enable pull up
 
     // DDRD &= ~ROTOR_SW; // set as input
     // PORTD |= ROTOR_SW; // enable pull up
@@ -54,14 +60,23 @@ int main(void)
     // Debounce
     unsigned long debounce_time = 20;
     unsigned long prev_sw_debounce = 0;
-    // unsigned long prev_btn_led_debounce = 0;
-    // unsigned long prev_btn_reset_debounce = 0;
-    uint8_t prev_sw_state = 0; // Knappen hög --> 5V
-    uint8_t true_sw_state = 1;
+    unsigned long prev_btn_led_debounce = 0;
+    unsigned long prev_btn_reset_debounce = 0;
+    // uint8_t prev_sw_state = 0; // Knappen hög --> 5V
+    // uint8_t true_sw_state = 1;
     // uint8_t prev_btn_led_state = 0; // Knappen hög --> 5V
     // uint8_t true_btn_led_state = 1;
     // uint8_t prev_btn_reset_state = 0; // Knappen hög --> 5V
     // uint8_t true_btn_reset_state = 1;
+
+    uint8_t prev_btn_led_state = PINB & BTN_LED;
+    uint8_t true_btn_led_state = prev_btn_led_state;
+
+    uint8_t prev_btn_reset_state = PINB & BTN_RESET;
+    uint8_t true_btn_reset_state = prev_btn_reset_state;
+
+    uint8_t prev_sw_state = PIND & ROTOR_SW;
+    uint8_t true_sw_state = prev_sw_state;
 
     extraTime_BlinkStage = 0;
 
@@ -78,7 +93,6 @@ int main(void)
 
             blink_state ^= LED_MASK;
             blink_state_rgb ^= LED_RGB_MASK;
-            
         }
 
         output_default = blink_state;
@@ -88,6 +102,94 @@ int main(void)
 
         // rgb_mode_manager();
         // uart_mode_manager();
+        
+        // check rotor switch status
+        uint8_t current_sw_state = PIND & ROTOR_SW;
+
+        if (prev_sw_state != current_sw_state)
+        {
+            sys_mode = RGB;
+            prev_sw_debounce = milliSec_get();
+        }
+
+        if (true_sw_state != current_sw_state)
+        {
+            if (milliSec_get() - prev_sw_debounce > debounce_time)
+            {
+                true_sw_state = current_sw_state;
+
+                if (!true_sw_state)
+                {
+                    rotor_sw_select = !rotor_sw_select;
+                    uart_print("rotor switch is pressed: ");
+                    uart_print_uint16(rotor_sw_select);
+                } else {
+                    uart_print("rotor switch is released: ");
+                    btn_led_reset = 4;
+                }
+            }
+        }
+        prev_sw_state = current_sw_state;
+
+        // check btn_green status
+        uint8_t current_btn_led_state = PINB & BTN_LED;
+
+        if (prev_btn_led_state != current_btn_led_state)
+        {
+            prev_btn_led_debounce = milliSec_get();
+        }
+
+        if (true_btn_led_state != current_btn_led_state)
+        {
+            if (milliSec_get() - prev_btn_led_debounce > debounce_time)
+            {
+                true_btn_led_state = current_btn_led_state;
+
+                if (!true_btn_led_state)
+                {
+                    btn_led_reset = (btn_led_reset + 1) % 2;
+                    // btn_led_reset = ON;
+                    uart_print("btn on/off is pressed: ");
+                    uart_print_uint16(btn_led_reset);
+                    uart_print("\r\n");
+                    // uart_print("\r\n");
+                    // btn_led_isPressed = !btn_led_isPressed;
+                }
+                else
+                {
+                    // btn_led_reset = OFF;
+                    uart_print("btn on/off is released: ");
+                    uart_print_uint16(btn_led_reset);
+                    uart_print("\r\n");
+                }
+            }
+        }
+        prev_btn_led_state = current_btn_led_state;
+
+        // check btn_red status
+        uint8_t current_btn_reset_state = PINB & BTN_RESET;
+
+        if (prev_btn_reset_state != current_btn_reset_state)
+        {
+            prev_btn_reset_debounce = milliSec_get();
+        }
+
+        if (true_btn_reset_state != current_btn_reset_state)
+        {
+            if (milliSec_get() - prev_btn_reset_debounce > debounce_time)
+            {
+                true_btn_reset_state = current_btn_reset_state;
+
+                if (!true_btn_reset_state)
+                {
+                    btn_led_reset = 2;
+                    uart_print("btn reset is pressed");
+                    uart_print("\r\n");
+                }
+            }
+        }
+        prev_btn_reset_state = current_btn_reset_state;
+
         flag_manager();
 
         switch (sys_mode)
@@ -108,79 +210,6 @@ int main(void)
             break;
         }
 
-        //check rotor switch status
-        uint8_t current_sw_state = PIND & ROTOR_SW;
-
-        if (prev_sw_state != current_sw_state)
-        {
-            sys_mode = RGB;
-            prev_sw_debounce = milliSec_get();
-        }
-
-        if (true_sw_state != current_sw_state)
-        {
-            if (milliSec_get() - prev_sw_debounce > debounce_time)
-            {
-                true_sw_state = current_sw_state;
-
-                if (!true_sw_state)
-                {
-                    rotor_sw_select = !rotor_sw_select;
-                    uart_print("rotor switch is pressed: ");
-                    uart_print_uint16(rotor_sw_select);
-                }
-            }
-        }
-        prev_sw_state = current_sw_state;
-
-        // // check btn_green status
-        // uint8_t current_btn_led_state = PINB & BTN_LED;
-
-        // if (prev_btn_led_state != current_btn_led_state)
-        // {
-        //     prev_btn_led_debounce = milliSec_get();
-        // }
-
-        // if (true_btn_led_state != current_btn_led_state)
-        // {
-        //     if (milliSec_get() - prev_btn_led_debounce > debounce_time)
-        //     {
-        //         true_btn_led_state = current_btn_led_state;
-
-        //         if (!true_btn_led_state && rotor_sw_select == 1)
-        //         {
-        //             btn_led_reset = (btn_led_reset + 1) % 2;
-        //             uart_print("btn on/off is pressed: ");
-        //             uart_print_uint16(btn_led_reset);
-        //             uart_print("\r\n");
-        //         }
-        //     }
-        // }
-        // prev_btn_led_state = current_btn_led_state;
-
-        // // check btn_red status
-        // uint8_t current_btn_reset_state = PINB & BTN_RESET;
-
-        // if (prev_btn_reset_state != current_btn_reset_state)
-        // {
-        //     prev_btn_reset_debounce = milliSec_get();
-        // }
-
-        // if (true_btn_reset_state != current_btn_reset_state)
-        // {
-        //     if (milliSec_get() - prev_btn_reset_debounce > debounce_time)
-        //     {
-        //         true_btn_reset_state = current_btn_reset_state;
-
-        //         if (!true_btn_reset_state && rotor_sw_select == 1)
-        //         {
-        //             btn_led_reset = 2;
-        //             uart_print("btn reset is pressed");
-        //             uart_print("\r\n");
-        //         }
-        //     }
-        // }
-        // prev_btn_reset_state = current_btn_reset_state;
 
         // updateLEDbits_RGBmode_BtnIsPressed(btn_led_reset);
     }

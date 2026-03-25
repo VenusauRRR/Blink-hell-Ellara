@@ -22,11 +22,11 @@
 #define BTN_RESET (1 << PB0)
 #define BTN_LED (1 << PB1)
 
-#define _OFF 0
-#define _RED 1
-#define _GREEN 2
-#define _BLUE 3
-#define _WHITE 4
+#define _rgb_OFF 0
+#define _rgb_RED 1
+#define _rgb_GREEN 2
+#define _rgb_BLUE 3
+#define _rgb_WHITE 4
 
 typedef enum{
     DEFAULT,
@@ -84,7 +84,8 @@ typedef enum{
 // extern volatile  Lightings_state lgt_uartMode;
 // extern volatile  Lightings_state lgt_rgbMode;
 // extern volatile uint8_t led_state_idx;
-// extern volatile uint8_t btn_led_reset;
+extern volatile uint8_t btn_led_reset;
+extern volatile uint8_t btn_led_isPressed;
 // extern volatile uint8_t led_blinkstadiet;
 
 extern volatile SYSTEM_MODE sys_mode;
@@ -109,6 +110,11 @@ extern volatile FLAG led_red_flag_uart;
 extern volatile FLAG led_green_flag_uart;
 extern volatile FLAG led_blue_flag_uart;
 extern volatile FLAG led_white_flag_uart;
+
+extern volatile FLAG led_red_flag_rgb;
+extern volatile FLAG led_green_flag_rgb;
+extern volatile FLAG led_blue_flag_rgb;
+extern volatile FLAG led_white_flag_rgb;
 
 // extern volatile char *input;
 
