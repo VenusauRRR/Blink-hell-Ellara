@@ -43,26 +43,22 @@ void updateRGBColor()
         output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | LED_RGB_RED;
         selectedLEDMask_rgb = LED_RED;
         selectedRGBMask_rgb = LED_RGB_RED;
-        // selectedFlag_rgb = &led_red_flag_rgb;
         break;
     case _rgb_GREEN:
         output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | LED_RGB_GREEN;
         selectedLEDMask_rgb = LED_GREEN;
         selectedRGBMask_rgb = LED_RGB_GREEN;
-        // selectedFlag_rgb = &led_green_flag_rgb;
 
         break;
     case _rgb_BLUE:
         output_rgb_rgb = (output_rgb_rgb & ~LED_RGB_MASK) | LED_RGB_BLUE;
         selectedLEDMask_rgb = LED_BLUE;
         selectedRGBMask_rgb = LED_RGB_BLUE;
-        // selectedFlag_rgb = &led_blue_flag_rgb;
         break;
     case _rgb_WHITE:
         output_rgb_rgb |= LED_RGB_MASK;
         selectedLEDMask_rgb = LED_WHITE;
         selectedRGBMask_rgb = LED_RGB_MASK;
-        // selectedFlag_rgb = &led_white_flag_rgb;
         break;
     default:
         break;

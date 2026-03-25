@@ -22,6 +22,7 @@
 #define BTN_RESET (1 << PB0)
 #define BTN_LED (1 << PB1)
 
+#define ROTOR_COLOR_COUNT 5
 #define _rgb_OFF 0
 #define _rgb_RED 1
 #define _rgb_GREEN 2
@@ -44,50 +45,6 @@ typedef enum{
     BLINK = 2
 } FLAG;
 
-// typedef struct{
-//     uint8_t led;
-//     FLAG state;
-// } Lgt_FLAG;
-
-// typedef struct{
-//     Lgt_FLAG red;
-//     Lgt_FLAG blue;
-//     Lgt_FLAG gree;
-//     Lgt_FLAG white;
-//     Lgt_FLAG rgb_red;
-//     Lgt_FLAG rgb_blue;
-//     Lgt_FLAG rgb_green;
-// }Lightings_state;
-
-// typedef enum
-// {
-//     ROTOR_OFF = 0,
-//     ROTOR_RED = LED_RGB_RED,
-//     ROTOR_GREEN = LED_RGB_GREEN,
-//     ROTOR_BLUE = LED_RGB_BLUE,
-//     ROTOR_WHITE = LED_RGB_RED | LED_RGB_GREEN | LED_RGB_BLUE,
-//     ROTOR_COLOR_COUNT = 5
-// } ROTOR_COLOR;
-
-// typedef enum 
-// {
-//     LED_ST_RED = LED_RED,
-//     LED_ST_GREEN = LED_GREEN,
-//     LED_ST_BLUE = LED_BLUE,
-//     LED_ST_WHITE = LED_WHITE,
-//     LED_ST_COUNT = 4
-// } LED_COLOR;
-
-// extern const LED_COLOR led_state_list[LED_ST_COUNT];
-// extern const ROTOR_COLOR rotor_color_list[ROTOR_COLOR_COUNT];
-
-
-#define ROTOR_COLOR_COUNT 5
-
-// extern Lightings_state lgt_defaultMode;
-// extern volatile  Lightings_state lgt_uartMode;
-// extern volatile  Lightings_state lgt_rgbMode;
-// extern volatile uint8_t led_state_idx;
 extern volatile uint8_t btn_led_reset;
 extern volatile uint8_t btn_led_isPressed;
 // extern volatile uint8_t led_blinkstadiet;

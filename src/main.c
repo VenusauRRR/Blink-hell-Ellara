@@ -22,14 +22,8 @@ volatile uint8_t output_default;
 volatile uint8_t output_uart;
 volatile uint8_t output_led_rgb;
 volatile uint8_t output_rgb_rgb;
-
-volatile uint8_t btn_led_reset = 4;
-// volatile uint8_t btn_led_isPressed = 0;
-
+volatile uint8_t btn_led_reset = _rgb_btn_X;
 volatile uint32_t extraTime_BlinkStage;
-
-// uint8_t press_btn_led;
-uint8_t press_btn_reset;
 
 int main(void)
 {
@@ -51,9 +45,6 @@ int main(void)
     DDRB &= ~BTN_RESET; // set as input
     PORTB |= BTN_RESET; // enable pull up
 
-    // DDRD &= ~ROTOR_SW; // set as input
-    // PORTD |= ROTOR_SW; // enable pull up
-
     unsigned long currentMilli = milliSec_get();
     unsigned long previousMilli = 0;
 
@@ -62,19 +53,11 @@ int main(void)
     unsigned long prev_sw_debounce = 0;
     unsigned long prev_btn_led_debounce = 0;
     unsigned long prev_btn_reset_debounce = 0;
-    // uint8_t prev_sw_state = 0; // Knappen hög --> 5V
-    // uint8_t true_sw_state = 1;
-    // uint8_t prev_btn_led_state = 0; // Knappen hög --> 5V
-    // uint8_t true_btn_led_state = 1;
-    // uint8_t prev_btn_reset_state = 0; // Knappen hög --> 5V
-    // uint8_t true_btn_reset_state = 1;
 
     uint8_t prev_btn_led_state = PINB & BTN_LED;
     uint8_t true_btn_led_state = prev_btn_led_state;
-
     uint8_t prev_btn_reset_state = PINB & BTN_RESET;
     uint8_t true_btn_reset_state = prev_btn_reset_state;
-
     uint8_t prev_sw_state = PIND & ROTOR_SW;
     uint8_t true_sw_state = prev_sw_state;
 
@@ -100,9 +83,6 @@ int main(void)
         output_led_rgb = blink_state;
         output_rgb_rgb = blink_state_rgb;
 
-        // rgb_mode_manager();
-        // uart_mode_manager();
-        
         // check rotor switch status
         uint8_t current_sw_state = PIND & ROTOR_SW;
 
@@ -148,16 +128,12 @@ int main(void)
                 if (!true_btn_led_state)
                 {
                     btn_led_reset = (btn_led_reset + 1) % 2;
-                    // btn_led_reset = ON;
                     uart_print("btn on/off is pressed: ");
                     uart_print_uint16(btn_led_reset);
                     uart_print("\r\n");
-                    // uart_print("\r\n");
-                    // btn_led_isPressed = !btn_led_isPressed;
                 }
                 else
                 {
-                    // btn_led_reset = OFF;
                     uart_print("btn on/off is released: ");
                     uart_print_uint16(btn_led_reset);
                     uart_print("\r\n");
@@ -209,8 +185,5 @@ int main(void)
         default:
             break;
         }
-
-
-        // updateLEDbits_RGBmode_BtnIsPressed(btn_led_reset);
     }
 }
