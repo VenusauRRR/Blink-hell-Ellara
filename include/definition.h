@@ -23,11 +23,11 @@
 #define BTN_LED (1 << PB1)
 
 #define ROTOR_COLOR_COUNT 5
-#define _rgb_OFF 0
-#define _rgb_RED 1
-#define _rgb_GREEN 2
-#define _rgb_BLUE 3
-#define _rgb_WHITE 4
+#define _OFF 0
+#define _RED 1
+#define _GREEN 2
+#define _BLUE 3
+#define _WHITE 4
 #define _rgb_btn_OFF 0
 #define _rgb_btn_ON 1
 #define _rgb_btn_BLINK 2
@@ -47,7 +47,6 @@ typedef enum{
 
 extern volatile uint8_t btn_led_reset;
 extern volatile uint8_t btn_led_isPressed;
-// extern volatile uint8_t led_blinkstadiet;
 
 extern volatile SYSTEM_MODE sys_mode;
 extern volatile  uint8_t rotor_state_idx;
@@ -62,11 +61,6 @@ extern volatile uint8_t output_rgb_rgb;
 
 extern volatile uint32_t extraTime_BlinkStage;
 
-#define LIGHTS_MAX 7
-
-// extern volatile Lightings_state flag_state_uart;
-// extern volatile Lightings_state flag_state_rgb;
-
 extern volatile FLAG led_red_flag_uart;
 extern volatile FLAG led_green_flag_uart;
 extern volatile FLAG led_blue_flag_uart;
@@ -77,7 +71,9 @@ extern volatile FLAG led_green_flag_rgb;
 extern volatile FLAG led_blue_flag_rgb;
 extern volatile FLAG led_white_flag_rgb;
 
-// extern volatile char *input;
+extern volatile FLAG blinkstadiet_flag;
+extern volatile uint8_t blinkstadiet_count;
+extern volatile FLAG current_flag_states[4];
 
 
 

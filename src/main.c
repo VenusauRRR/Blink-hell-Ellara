@@ -76,6 +76,13 @@ int main(void)
 
             blink_state ^= LED_MASK;
             blink_state_rgb ^= LED_RGB_MASK;
+            blinkstadiet_count = (blinkstadiet_count + 1) % 4;
+        }
+
+        if (blinkstadiet_flag == ON){
+            extraTime_BlinkStage = (uint32_t)potentioReading_A1 * 255 / 1023;
+        } else{
+            extraTime_BlinkStage = 0;
         }
 
         output_default = blink_state;
@@ -100,11 +107,24 @@ int main(void)
 
                 if (!true_sw_state)
                 {
+
                     rotor_sw_select = !rotor_sw_select;
+
+                    if (blinkstadiet_flag == ON)
+                    {
+                        blinkstadiet_flag = OFF;
+                    }
                     uart_print("rotor switch is pressed: ");
                     uart_print_uint16(rotor_sw_select);
-                } else {
+                    uart_print("\r\n");
+                    uart_print("blink steg flag: ");
+                    uart_print_uint16(blinkstadiet_flag);
+                    uart_print("\r\n");
+                }
+                else
+                {
                     uart_print("rotor switch is released: ");
+                    uart_print("\r\n");
                     btn_led_reset = _rgb_btn_X;
                 }
             }

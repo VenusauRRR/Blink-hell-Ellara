@@ -4,7 +4,9 @@
 #include <avr/io.h>
 #include "../include/definition.h"
 
-void checkFlag(uint8_t mask, uint8_t *output, uint8_t *blinkState, FLAG *f);
+// void checkFlag(uint8_t mask, uint8_t *output, uint8_t *blinkState, FLAG *f);
+
+void readLedFlagStates();
 
 void flag_manager();
 
