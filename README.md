@@ -41,7 +41,8 @@ The system demonstrates interaction between multiple hardware components and dif
     - "toggle X": toggle LED color X same as other LEDs
     - *** X: red/green/blue/white
 
-<img src="image.png" alt="Door Entry Meny" width="300" />
+<img src="image_wokwi.png" alt="wokwi diagram" width="300" />
+<img src="image_arduino.jpg" alt="arduino assembly" width="300" />
 
 
 ## Project Structure
