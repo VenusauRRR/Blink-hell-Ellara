@@ -13,7 +13,7 @@ The program is written in pure C using register manipulation, without relying on
 
 The system demonstrates interaction between multiple hardware components and different control inputs while maintaining responsive, non-blocking behavior.
 
-## Harwares
+## Hardwares
 - Arduino Microcontroller
 - 4 x Leds (red, green, blue, white)
 - 1 x RGB
@@ -36,9 +36,9 @@ The system demonstrates interaction between multiple hardware components and dif
     - press push button 1 -> control the relevant LED (e.g. red) on/off
     - press push button 2 -> reset the relevant LED (e.g. red) to blinking state
 3. Mode 3: control from UART terminal
-    - "disable X": keep LED color X off while keeping the other LEDs blinking
-    - "enable X": keep LED color X on while keeping the other LEDs blinking
-    - "toggle X": toggle LED color X same as other LEDs
+    - "disable X": keep LED color X OFF
+    - "enable X": restore LED color X default state (blinking)
+    - "toggle X": toggle LED color X (ON)
     - *** X: red/green/blue/white
 
 <img src="image_wokwi.png" alt="wokwi diagram" width="300" />
