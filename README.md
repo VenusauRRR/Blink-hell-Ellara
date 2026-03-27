@@ -33,8 +33,8 @@ The system demonstrates interaction between multiple hardware components and dif
     - press rotary switch -> confirm selected color from RGB (e.g. RGB-red) and disable rotary encoder changing RGB color
     - If selected RGB color = off, LEDs blink in sequence
     - Potentiometer 2 adds on time interval when LEDs blink in sequence
-    - press push button 1 -> control the relevant LED (e.g. red) on/off while keeping the other LEDs blinking
-    - press push button 2 -> reset all LEDs to blinking state
+    - press push button 1 -> control the relevant LED (e.g. red) on/off
+    - press push button 2 -> reset the relevant LED (e.g. red) to blinking state
 3. Mode 3: control from UART terminal
     - "disable X": keep LED color X off while keeping the other LEDs blinking
     - "enable X": keep LED color X on while keeping the other LEDs blinking
