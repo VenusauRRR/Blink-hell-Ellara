@@ -203,7 +203,7 @@ void updateLEDColorFromRGB_whenRotorSwitchIsPressed()
 
 void updateLEDColorFromRGB_whenBtnIsPressed()
 {
-    if (btn_led_reset == _rgb_btn_X)
+    if (btn_led_reset == _rgb_btn_init)
     {
         return;
     }
@@ -229,7 +229,7 @@ void flag_manager()
     {
     case UART:
         blinkstadiet_flag = OFF;
-        btn_led_reset = _rgb_btn_X;
+        btn_led_reset = _rgb_btn_init;
         checkFlagAndDisplayLedColors();
         break;
     case RGB:

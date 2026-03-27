@@ -22,7 +22,7 @@ volatile uint8_t output_default;
 volatile uint8_t output_uart;
 volatile uint8_t output_led_rgb;
 volatile uint8_t output_rgb_rgb;
-volatile uint8_t btn_led_reset = _rgb_btn_X;
+volatile uint8_t btn_led_reset = _rgb_btn_init;
 volatile uint32_t extraTime_BlinkStage;
 
 int main(void)
@@ -107,7 +107,6 @@ int main(void)
 
                 if (!true_sw_state)
                 {
-
                     rotor_sw_select = !rotor_sw_select;
 
                     if (blinkstadiet_flag == ON)
@@ -117,15 +116,10 @@ int main(void)
                     uart_print("rotor switch is pressed: ");
                     uart_print_uint16(rotor_sw_select);
                     uart_print("\r\n");
-                    uart_print("blink steg flag: ");
-                    uart_print_uint16(blinkstadiet_flag);
-                    uart_print("\r\n");
                 }
                 else
                 {
-                    uart_print("rotor switch is released: ");
-                    uart_print("\r\n");
-                    btn_led_reset = _rgb_btn_X;
+                    btn_led_reset = _rgb_btn_init;
                 }
             }
         }
@@ -149,12 +143,6 @@ int main(void)
                 {
                     btn_led_reset = (btn_led_reset + 1) % 2;
                     uart_print("btn on/off is pressed: ");
-                    uart_print_uint16(btn_led_reset);
-                    uart_print("\r\n");
-                }
-                else
-                {
-                    uart_print("btn on/off is released: ");
                     uart_print_uint16(btn_led_reset);
                     uart_print("\r\n");
                 }

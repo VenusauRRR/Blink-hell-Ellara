@@ -31,7 +31,7 @@
 #define _rgb_btn_OFF 0
 #define _rgb_btn_ON 1
 #define _rgb_btn_BLINK 2
-#define _rgb_btn_X 3
+#define _rgb_btn_init 3
 
 typedef enum{
     DEFAULT,

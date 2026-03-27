@@ -27,7 +27,7 @@ void stirLEDfromUART(const char *input)
 {
     uint8_t selectedLEDmask;
     splitString(input);
-    
+
     FLAG temp;
 
     if (strcmp(stir_mode, "disable") == 0)
@@ -126,6 +126,7 @@ ISR(USART_RX_vect)
             input[20] = '\0';
             i = 0;
             uart_print((char *)input);
+            uart_print("\r\n");
             stirLEDfromUART(input);
         }
     }
@@ -134,6 +135,7 @@ ISR(USART_RX_vect)
         input[i] = '\0';
         i = 0;
         uart_print((char *)input);
+        uart_print("\r\n");
         stirLEDfromUART(input);
     }
 }
